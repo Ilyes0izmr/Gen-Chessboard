@@ -1,0 +1,36 @@
+/* Chessboard container */
+.chessboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px; /* Total width of the chessboard */
+  height: 400px; /* Total height of the chessboard */
+  border: 2px solid black; /* Optional: Add a border around the chessboard */
+}
+
+/* Each row in the chessboard */
+.chessboard-row {
+  display: flex;
+  width: 100%; /* Ensure rows span the full width of the chessboard */
+  height: 12.5%; /* Each row takes up 1/8th of the chessboard height */
+}
+
+/* Individual square */
+.square {
+  width: 12.5%; /* Each square takes up 1/8th of the chessboard width */
+  height: 100%; /* Squares fill the full height of their row */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Light square */
+.square.light {
+  background-color: #f0d9b5; /* Light square color */
+}
+
+/* Dark square */
+.square.dark {
+  background-color: #b58863; /* Dark square color */
+}

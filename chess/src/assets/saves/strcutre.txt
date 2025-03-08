@@ -1,0 +1,21 @@
+chess-genetic-algorithm/
+│── public/                # Static assets (favicon, index.html, etc.)
+│── src/
+│   ├── assets/            # Images, icons, and other static files
+│   ├── components/        # Reusable UI components
+│   │   ├── Chessboard.jsx  # Renders the chessboard
+│   │   ├── Square.jsx      # Represents a square on the board
+│   │   ├── Controls.jsx    # UI for controlling the algorithm (start, stop, reset, etc.)
+│   ├── algorithms/        # Genetic algorithm logic
+│   │   ├── GeneticAlgorithm.js # Core genetic algorithm implementation
+│   │   ├── Fitness.js      # Fitness function for evaluating solutions
+│   ├── utils/             # Helper functions
+│   ├── pages/             # Main pages of the app
+│   │   ├── Home.jsx        # Main page showing the chessboard
+│   │   ├── About.jsx       # Info about the algorithm
+│   ├── App.jsx            # Root component
+│   ├── main.jsx           # Entry point (if using Vite)
+│   ├── index.css          # Global styles
+│── package.json           # Dependencies and scripts
+│── vite.config.js         # Configuration for Vite (if using Vite)
+│── .gitignore             # Ignored files
