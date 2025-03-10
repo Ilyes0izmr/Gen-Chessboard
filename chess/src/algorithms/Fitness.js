@@ -6,9 +6,10 @@
  * @returns {number} - The fitness score of the board.
  */
 export function calculateFitness(board) {
-    const conflictCount = calculateConflicts(board);
-    console.log(`Total Conflicts: ${conflictCount}`);
-    return 1 / (1 + conflictCount); // Fitness formula: Fi = 1 / (1 + conflict_nbr)
+  const conflictCount = calculateConflicts(board);
+  const penalty = calculateColumnPenalty(board); // Calculate penalty for uneven queen distribution
+  console.log(`Total Conflicts: ${conflictCount}, Penalty: ${penalty}`);
+  return 1 / (1 + conflictCount + penalty); // Fitness formula: Fi = 1 / (1 + conflict_nbr + penalty)
 }
   
 /**
@@ -87,4 +88,27 @@ function findConflictsForPiece(board, row, col, piece) {
   
     //console.log(`Conflicts for piece at (${row}, ${col}): ${Array.from(conflicts).join(', ')}`);
     return conflicts;
+}
+
+function calculateColumnPenalty(board) {
+  let penalty = 0;
+
+  // Iterate through each column
+  for (let col = 0; col < board[0].length; col++) {
+      let queenCount = 0;
+
+      // Count the number of queens in the current column
+      for (let row = 0; row < board.length; row++) {
+          if (board[row][col] === 'Q') {
+              queenCount++;
+          }
+      }
+
+      // If there is more than one queen in the column, add to the penalty
+      if (queenCount > 1) {
+          penalty += queenCount - 1; // Penalty is the excess queens in the column
+      }
+  }
+
+  return penalty;
 }

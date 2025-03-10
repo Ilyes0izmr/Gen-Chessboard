@@ -25,11 +25,15 @@ export async function runGeneticAlgorithm({
   onGenerationComplete,
   crossoverProbability,
   mutationProbability,
+  onMessageUpdate, // New callback for updating messages
 }) {
   let population = generatePopulation(populationSize);
   let bestIndividual = null;
 
   console.log(`Starting genetic algorithm with maxGenerations=${maxGenerations}, targetConflicts=${targetConflicts}, populationSize=${populationSize} ,proba=${crossoverProbability}, ${mutationProbability}`);
+
+  // Notify that AI is thinking
+  if (onMessageUpdate) onMessageUpdate("AI is thinking...");
 
   for (let generation = 1; generation <= maxGenerations; generation++) {
     console.log(`\n--- Generation ${generation} started ---`);
@@ -58,12 +62,14 @@ export async function runGeneticAlgorithm({
       conflicts: bestIndividual.conflicts,
       fitness: bestIndividual.fitness,
     });
+    
 
     // Notify the UI about the current generation's progress
     if (onGenerationComplete) {
       const bestBoardMatrix = bestIndividual.matrix;
+      const bestConflicts = bestIndividual.conflicts; // Pass conflicts value
       if (Array.isArray(bestBoardMatrix) && bestBoardMatrix.length === 8) {
-        await onGenerationComplete(generation, JSON.parse(JSON.stringify(bestBoardMatrix))); // Deep copy
+        await onGenerationComplete(generation, JSON.parse(JSON.stringify(bestBoardMatrix)), bestConflicts); // Include conflicts
       } else {
         console.error('Invalid best board matrix:', bestBoardMatrix);
       }
@@ -72,13 +78,14 @@ export async function runGeneticAlgorithm({
     // Check stopping conditions
     if (currentBest.conflicts <= targetConflicts) {
       console.log(`Target conflicts (${targetConflicts}) achieved in generation ${generation}. Stopping algorithm.`);
+      if (onMessageUpdate) onMessageUpdate("AI finished calculation!"); // Notify completion
       return JSON.parse(JSON.stringify(bestIndividual.matrix)); // Deep copy
     }
 
     // Perform selection, crossover, and mutation
     const parentPairs = rouletteWheelSelection(population);
-    const offspring = performCrossover(parentPairs , crossoverProbability);
-    const mutatedOffspring = performMutation(offspring , mutationProbability);
+    const offspring = performCrossover(parentPairs, crossoverProbability);
+    const mutatedOffspring = performMutation(offspring, mutationProbability);
 
     population = mutatedOffspring;
 
@@ -89,6 +96,7 @@ export async function runGeneticAlgorithm({
   }
 
   console.log('Maximum generations reached. Returning best individual found.');
+  if (onMessageUpdate) onMessageUpdate("AI finished calculation!"); // Notify completion
   return JSON.parse(JSON.stringify(bestIndividual.matrix)); // Deep copy
 }
 

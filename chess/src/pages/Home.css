@@ -1,160 +1,104 @@
+/* Global styles */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #07002D; /* Dark purple background */
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
 /* Center everything */
 .home-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-    padding: 20px;
-  }
-  
-  .home-container h1 {
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  /* Main layout for chessboard and controls */
-  .main-layout {
-    display: flex;
-    justify-content: space-between; /* Space between chessboard and controls */
-    align-items: flex-start; /* Align items at the top */
-    gap: 2rem; /* Add some spacing between the two sections */
-    width: 100%;
-    max-width: 1200px; /* Limit the maximum width */
-  }
-  
-  /* Chessboard container */
-  .chessboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Controls container */
-  .controls-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Chessboard styles */
-  .chessboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 400px; /* Total width of the chessboard */
-    height: 400px; /* Total height of the chessboard */
-    border: 2px solid black; /* Optional: Add a border around the chessboard */
-  }
-  
-  .chessboard-row {
-    display: flex;
-    width: 100%; /* Ensure rows span the full width of the chessboard */
-    height: 12.5%; /* Each row takes up 1/8th of the chessboard height */
-  }
-  
-  .square {
-    width: 12.5%; /* Each square takes up 1/8th of the chessboard width */
-    height: 100%; /* Squares fill the full height of their row */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .square.light {
-    background-color: #f0d9b5; /* Light square color */
-  }
-  
-  .square.dark {
-    background-color: #b58863; /* Dark square color */
-  }
-  
-  /* Info panel */
-  .info-panel {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 15px;
-    width: 300px;
-    text-align: left;
-  }
-  
-  .info-panel p {
-    margin: 5px 0;
-  }
-  
-  .info-panel strong {
-    color: #333;
-  }
-  
-  /* Controls styles */
-  .controls {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    max-width: 350px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .input-group label {
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .input-group input {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  
-  .input-group input:focus {
-    border-color: #4CAF50;
-    outline: none;
-  }
-  
-  button {
-    padding: 0.8rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  .start-button {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .start-button:hover {
-    background-color: #45a049;
-  }
-  
-  .reset-button {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .reset-button:hover {
-    background-color: #e53935;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 20px;
+  width: 100%;
+}
+
+.home-container h1 {
+  font-size: 2.5rem;
+  color: #15F5BA; /* Neon green accent */
+  margin-bottom: 20px;
+}
+
+/* Main layout */
+.main-layout {
+  display: flex;
+  flex-direction: row; /* Align chessboard and controls horizontally */
+  gap: 0; /* No space between board and sidebar */
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Chessboard container */
+.chessboard-container {
+  flex: 1; /* Take up remaining space */
+  max-width: 400px; /* Match chessboard width */
+  height: 400px; /* Fixed height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1E1240; /* Darker purple */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Chessboard styles */
+.chessboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 400px;
+  border: 2px solid #15F5BA;
+  border-radius: 8px;
+}
+
+.chessboard-row {
+  display: flex;
+  width: 100%;
+  height: 12.5%;
+}
+
+.square {
+  width: 12.5%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square.light {
+  background-color: #836FFF; /* Light purple */
+}
+
+.square.dark {
+  background-color: #3D2C8D; /* Darker purple */
+}
+
+/* Info panel */
+.info-panel {
+  background-color: #1E1240;
+  border: 1px solid #836FFF;
+  border-radius: 8px;
+  padding: 15px;
+  width: 300px;
+  text-align: left;
+  color: #ffffff;
+}
+
+.info-panel p {
+  margin: 5px 0;
+}
+
+.info-panel strong {
+  color: #15F5BA;
+}

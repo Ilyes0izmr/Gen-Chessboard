@@ -1,17 +1,20 @@
-// src/components/Controls.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
+import startIcon from '../assets/start.png'; // Import start button icon
+import stopIcon from '../assets/reset.png';    // Rename reset to stop icon
+import generationsIcon from '../assets/generations-icon.png'; // Import generations icon
+import targetIcon from '../assets/target-icon.png';           // Import target fitness icon
+import populationIcon from '../assets/population-icon.png';   // Import population size icon
+import crossoverIcon from '../assets/crossover-icon.png';     // Import crossover probability icon
+import mutationIcon from '../assets/mutation-icon.png';       // Import mutation probability icon
 import './Controls.css';
 
-const Controls = ({ onStart, onReset }) => {
-  // Log the props to debug
-  console.log({ onStart, onReset });
-
+const Controls = ({ onStart, onStop, conflicts, message }) => {
   // Default values for inputs
   const [maxGen, setMaxGen] = useState(10);
   const [targetFitness, setTargetFitness] = useState(0);
   const [popSize, setPopSize] = useState(10);
-  const [crossoverProbability, setCrossoverProbability] = useState(0.8); // Default crossover probability
-  const [mutationProbability, setMutationProbability] = useState(0.05); // Default mutation probability
+  const [crossoverProbability, setCrossoverProbability] = useState(0.8);
+  const [mutationProbability, setMutationProbability] = useState(0.05);
 
   // Input change handlers
   const handleMaxGenChange = (e) => {
@@ -26,98 +29,120 @@ const Controls = ({ onStart, onReset }) => {
 
   const handlePopulationChange = (e) => {
     let value = parseInt(e.target.value, 10);
-    if (isNaN(value)) value = 10; // Default if invalid
-    if (value % 2 !== 0) value += 1; // Force even number
+    if (isNaN(value)) value = 10;
+    if (value % 2 !== 0) value += 1;
     setPopSize(value);
   };
 
   const handleCrossoverProbabilityChange = (e) => {
     const value = parseFloat(e.target.value);
-    setCrossoverProbability(isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value); // Clamp between 0 and 1
+    setCrossoverProbability(isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value);
   };
 
   const handleMutationProbabilityChange = (e) => {
     const value = parseFloat(e.target.value);
-    setMutationProbability(isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value); // Clamp between 0 and 1
+    setMutationProbability(isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value);
   };
 
   return (
     <div className="controls">
-      {/* Max Generations Input */}
-      <div className="input-group">
-        <label htmlFor="maxGen">Max Generations</label>
-        <input
-          type="number"
-          id="maxGen"
-          value={maxGen}
-          onChange={handleMaxGenChange}
-        />
-      </div>
+      <div className="sidebar">
+        {/* Max Generations */}
+        <div className="input-group">
+          <img src={generationsIcon} alt="Generations" className="icon" />
+          <label htmlFor="maxGen">  Max Gens</label>
+          <input
+            type="number"
+            id="maxGen"
+            value={maxGen}
+            onChange={handleMaxGenChange}
+          />
+        </div>
 
-      {/* Target Fitness Input */}
-      <div className="input-group">
-        <label htmlFor="targetFitness">Target Fitness</label>
-        <input
-          type="number"
-          id="targetFitness"
-          value={targetFitness}
-          onChange={handleTargetFitnessChange}
-        />
-      </div>
+        {/* Target Fitness */}
+        <div className="input-group">
+          <img src={targetIcon} alt="Target Fitness" className="icon" />
+          <label htmlFor="targetFitness">  Target Fitness</label>
+          <input
+            type="number"
+            id="targetFitness"
+            value={targetFitness}
+            onChange={handleTargetFitnessChange}
+          />
+        </div>
 
-      {/* Population Size Input */}
-      <div className="input-group">
-        <label htmlFor="popSize">Population Size (even number)</label>
-        <input
-          type="number"
-          id="popSize"
-          value={popSize}
-          onChange={handlePopulationChange}
-        />
-      </div>
+        {/* Population Size */}
+        <div className="input-group">
+          <img src={populationIcon} alt="Population Size" className="icon" />
+          <label htmlFor="popSize">  Population Size</label>
+          <input
+            type="number"
+            id="popSize"
+            value={popSize}
+            onChange={handlePopulationChange}
+          />
+        </div>
 
-      {/* Crossover Probability Input */}
-      <div className="input-group">
-        <label htmlFor="crossoverProbability">Crossover Probability (0-1)</label>
-        <input
-          type="number"
-          step="0.01" // Allow decimal values with a step of 0.01
-          id="crossoverProbability"
-          value={crossoverProbability}
-          onChange={handleCrossoverProbabilityChange}
-        />
-      </div>
+        {/* Crossover Probability */}
+        <div className="input-group">
+          <img src={crossoverIcon} alt="Crossover Probability" className="icon" />
+          <label htmlFor="crossoverProbability">  Crossover %</label>
+          <input
+            type="number"
+            step="0.01"
+            id="crossoverProbability"
+            value={crossoverProbability}
+            onChange={handleCrossoverProbabilityChange}
+          />
+        </div>
 
-      {/* Mutation Probability Input */}
-      <div className="input-group">
-        <label htmlFor="mutationProbability">Mutation Probability (0-1)</label>
-        <input
-          type="number"
-          step="0.01" // Allow decimal values with a step of 0.01
-          id="mutationProbability"
-          value={mutationProbability}
-          onChange={handleMutationProbabilityChange}
-        />
-      </div>
+        {/* Mutation Probability */}
+        <div className="input-group">
+          <img src={mutationIcon} alt="Mutation Probability" className="icon" />
+          <label htmlFor="mutationProbability">  Mutation %</label>
+          <input
+            type="number"
+            step="0.01"
+            id="mutationProbability"
+            value={mutationProbability}
+            onChange={handleMutationProbabilityChange}
+          />
+        </div>
 
-      {/* Buttons */}
-      <button
-        className="start-button"
-        onClick={() =>
-          onStart({
-            maxGen,
-            targetFitness,
-            popSize,
-            crossoverProbability,
-            mutationProbability,
-          })
-        }
-      >
-        Start Algorithm
-      </button>
-      <button className="reset-button" onClick={onReset}>
-        Reset Board
-      </button>
+        {/* Display Conflicts */}
+        <div className="info-item">
+          <span className="info-label">Conflicts:</span>
+          <span className="info-value">{conflicts}</span>
+        </div>
+
+        {/* Display Message */}
+        <div className="message-item">
+          <span className="message-text">{message}</span>
+        </div>
+
+        {/* Start and Stop Buttons */}
+        <div className="button-group">
+          <div
+            className="button-item"
+            onClick={() =>
+              onStart({
+                maxGen,
+                targetFitness,
+                popSize,
+                crossoverProbability,
+                mutationProbability,
+              })
+            }
+          >
+            <img src={startIcon} alt="Start" className="icon" />
+            <span className="button-label">Start</span>
+          </div>
+          <div className="button-item" onClick={onStop}>
+            <img src={stopIcon} alt="Stop" className="icon" />
+            <span className="button-label">Stop</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 // src/algorithms/Crossover.js
 import { convertVectorToMatrix } from './BoardGeneration';
-export function performCrossover(parentPairs, crossoverProbability = 0.8) {
+export function performCrossover(parentPairs, crossoverProbability) {
   const offspring = [];
 
   for (const [parent1, parent2] of parentPairs) {

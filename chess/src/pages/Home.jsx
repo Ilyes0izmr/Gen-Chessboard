@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useState } from 'react';
 import Chessboard from '../components/Chessboard';
 import Controls from '../components/Controls';
@@ -9,6 +8,8 @@ import './Home.css';
 const Home = () => {
   // State for the chessboard
   const [board, setBoard] = useState(null); // Start with no board
+  const [conflicts, setConflicts] = useState(0); // Start with 0 conflicts
+  const [message, setMessage] = useState(""); // State for dynamic messages
 
   // Handler for starting the algorithm
   const handleStart = async ({
@@ -34,15 +35,19 @@ const Home = () => {
         populationSize: popSize,
         crossoverProbability, // Pass crossover probability
         mutationProbability, // Pass mutation probability
-        onGenerationComplete: async (generation, bestBoardSoFar) => {
-          console.log(`Generation ${generation} complete. Best board so far:`, bestBoardSoFar);
+        onGenerationComplete: async (generation, bestBoardSoFar, bestConflicts) => {
+          console.log(`Generation ${generation} complete. Best board so far:`, bestBoardSoFar, `Conflicts:`, bestConflicts);
 
-          // Update the board state and wait for the UI to re-render
+          // Update the board state and conflicts value
           setBoard((prevBoard) => {
             console.log('Updating board state:', bestBoardSoFar);
             return JSON.parse(JSON.stringify(bestBoardSoFar)); // Create a deep copy to force re-render
           });
+          setConflicts(bestConflicts); // Update conflicts value
           await sleep(200); // Add a delay of 200ms to make updates visible
+        },
+        onMessageUpdate: (newMessage) => {
+          setMessage(newMessage); // Update the message dynamically
         },
       });
     } catch (error) {
@@ -54,6 +59,8 @@ const Home = () => {
   const handleReset = () => {
     console.log('Resetting board...');
     setBoard(null); // Reset the board state (triggers re-render with an empty board)
+    setConflicts(0); // Reset conflicts value
+    setMessage(""); // Clear the message
   };
 
   return (
@@ -64,9 +71,9 @@ const Home = () => {
         <div className="chessboard-container">
           <Chessboard board={board} />
         </div>
-        {/* Pass onStart and onReset as props */}
+        {/* Pass onStart, onReset, conflicts, and message as props */}
         <div className="controls-container">
-          <Controls onStart={handleStart} onReset={handleReset} />
+          <Controls onStart={handleStart} onStop={handleReset} conflicts={conflicts} message={message} />
         </div>
       </div>
     </div>
