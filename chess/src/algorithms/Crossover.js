@@ -1,15 +1,16 @@
 // src/algorithms/Crossover.js
 import { convertVectorToMatrix } from './BoardGeneration';
-export function performCrossover(parentPairs, crossoverProbability) {
+import { performMutation } from './Mutation'; // Import mutation function
+
+export function performCrossover(parentPairs, crossoverProbability, mutationProbability) {
   const offspring = [];
 
   for (const [parent1, parent2] of parentPairs) {
-    // Roll a random number to decide if crossover occurs
     const randomValue = Math.random();
     if (randomValue < crossoverProbability) {
       console.log(`Crossover occurred between Parent 1 and Parent 2`);
 
-      // Perform crossover: Exchange halves of the vectors
+      // Perform one-point crossover (split at the midpoint)
       const midpoint = Math.floor(parent1.vector.length / 2);
       const child1Vector = [
         ...parent1.vector.slice(0, midpoint),
@@ -20,19 +21,23 @@ export function performCrossover(parentPairs, crossoverProbability) {
         ...parent1.vector.slice(midpoint),
       ];
 
-      // Reconstruct matrices from vectors
+      // Convert vectors back to matrices
       const child1Matrix = convertVectorToMatrix(child1Vector);
       const child2Matrix = convertVectorToMatrix(child2Vector);
 
-      // Create offspring objects
-      offspring.push({ matrix: child1Matrix, vector: child1Vector, fitness: null });
-      offspring.push({ matrix: child2Matrix, vector: child2Vector, fitness: null });
+      // Create child objects
+      const child1 = { matrix: child1Matrix, vector: child1Vector, fitness: null };
+      const child2 = { matrix: child2Matrix, vector: child2Vector, fitness: null };
+
+      // Apply mutation
+      const mutatedOffspring = performMutation([child1, child2], mutationProbability);
+      offspring.push(...mutatedOffspring);
     } else {
       console.log(`No crossover occurred between Parent 1 and Parent 2`);
 
-      // Add parents as-is to the next generation (as offspring)
-      offspring.push({ ...parent1, fitness: null }); // Clone parent1
-      offspring.push({ ...parent2, fitness: null }); // Clone parent2
+      // Add parents to next generation (deep copy to avoid reference issues)
+      offspring.push(JSON.parse(JSON.stringify({ ...parent1, fitness: null }))); // Clone parent1
+      offspring.push(JSON.parse(JSON.stringify({ ...parent2, fitness: null }))); // Clone parent2
     }
   }
 

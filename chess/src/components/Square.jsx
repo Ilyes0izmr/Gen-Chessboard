@@ -10,24 +10,23 @@ import bishopImage from '../assets/pieces/b.png';
 const Square = ({ isDark, piece }) => {
   const squareClass = isDark ? 'square dark' : 'square light';
 
-  // Map piece names to imported images
   const pieceImages = {
-    Q: queenImage, // Queen
-    K: knightImage,  // knight
-    R: rookImage,  // Rook
-    B: bishopImage, // Bishop
+    Q: queenImage, 
+    K: knightImage,  
+    R: rookImage,  
+    B: bishopImage, 
   };
 
   return (
     <div className={squareClass}>
       {piece && pieceImages[piece] ? (
         <img
-          src={pieceImages[piece]} // Use the imported image
+          src={pieceImages[piece]} 
           alt={piece}
           style={{
-            width: '100%', // Scale the image to fit the square
+            width: '100%', 
             height: '100%',
-            objectFit: 'contain', // Ensure the image fits without distortion
+            objectFit: 'contain', 
           }}
         />
       ) : null}

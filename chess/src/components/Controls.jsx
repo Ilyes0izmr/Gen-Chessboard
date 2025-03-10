@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import startIcon from '../assets/start.png'; // Import start button icon
-import stopIcon from '../assets/reset.png';    // Rename reset to stop icon
-import generationsIcon from '../assets/generations-icon.png'; // Import generations icon
-import targetIcon from '../assets/target-icon.png';           // Import target fitness icon
-import populationIcon from '../assets/population-icon.png';   // Import population size icon
-import crossoverIcon from '../assets/crossover-icon.png';     // Import crossover probability icon
-import mutationIcon from '../assets/mutation-icon.png';       // Import mutation probability icon
+import startIcon from '../assets/start.png';
+import stopIcon from '../assets/reset.png';  
+import generationsIcon from '../assets/generations-icon.png'; 
+import targetIcon from '../assets/target-icon.png';           
+import populationIcon from '../assets/population-icon.png';   
+import crossoverIcon from '../assets/crossover-icon.png';     
+import mutationIcon from '../assets/mutation-icon.png';      
 import './Controls.css';
 
 const Controls = ({ onStart, onStop, conflicts, message }) => {
-  // Default values for inputs
-  const [maxGen, setMaxGen] = useState(10);
-  const [targetFitness, setTargetFitness] = useState(0);
-  const [popSize, setPopSize] = useState(10);
-  const [crossoverProbability, setCrossoverProbability] = useState(0.8);
-  const [mutationProbability, setMutationProbability] = useState(0.05);
 
-  // Input change handlers
+  const [maxGen, setMaxGen] = useState(50);
+  const [targetFitness, setTargetFitness] = useState(0);
+  const [popSize, setPopSize] = useState(50);
+  const [crossoverProbability, setCrossoverProbability] = useState(0.8);
+  const [mutationProbability, setMutationProbability] = useState(0.1);
+
+ 
   const handleMaxGenChange = (e) => {
     const value = parseInt(e.target.value, 10);
     setMaxGen(isNaN(value) ? 10 : value);
