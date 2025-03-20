@@ -5,11 +5,11 @@ import './Chessboard.css';
 
 const Chessboard = ({ board }) => {
   
-  console.log('Chessboard received board:', board);
+  //console.log('Chessboard received board:', board);
   const currentBoard = board || Array.from({ length: 8 }, () => Array(8).fill(null));
 
   useEffect(() => {
-    console.log('Chessboard prop "board" changed:', board);
+    //console.log('Chessboard prop "board" changed:', board);
   }, [board]);
 
   const renderBoard = () => {

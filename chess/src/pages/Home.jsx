@@ -30,15 +30,15 @@ const Home = () => {
         crossoverProbability,
         mutationProbability, 
         onGenerationComplete: async (generation, bestBoardSoFar, bestConflicts) => {
-          console.log(`Generation ${generation} complete. Best board so far:`, bestBoardSoFar, `Conflicts:`, bestConflicts);
+         console.log(`Generation ${generation}`);
 
          
           setBoard((prevBoard) => {
-            console.log('Updating board state:', bestBoardSoFar);
+            //console.log('Updating board state:', bestBoardSoFar);
             return JSON.parse(JSON.stringify(bestBoardSoFar)); 
           });
           setConflicts(bestConflicts); 
-          await sleep(100); 
+          await sleep(0); 
         },
         onMessageUpdate: (newMessage) => {
           setMessage(newMessage); 

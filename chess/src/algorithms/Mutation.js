@@ -4,10 +4,10 @@ export function performMutation(offspring, mutationProbability) {
     const randomValue = Math.random();
 
     if (randomValue >= mutationProbability) {
-      console.log(`No mutation occurred for offspring`);
+      //console.log(`No mutation occurred for offspring`);
       return { ...individual, fitness: null }; 
     } else {
-      console.log(`Mutation occurred for offspring`);
+      //console.log(`Mutation occurred for offspring`);
       const mutatedVector = [...individual.vector];
 
       //(0-31) or lower half (32-63)
@@ -40,7 +40,7 @@ export function performMutation(offspring, mutationProbability) {
       mutatedVector[indx1] = mutatedVector[indx2];
       mutatedVector[indx2] = temp;
 
-      console.log(`Swapped cells at indices ${indx1} and ${indx2}`);
+      //console.log(`Swapped cells at indices ${indx1} and ${indx2}`);
 
       return { 
         matrix: convertVectorToMatrix(mutatedVector), 

@@ -1,47 +1,52 @@
-export function rouletteWheelSelection(population) {
-  const remainingPopulation = [...population];
-  const pairs = [];
+export function rouletteWheelSelection(population, eliteCount = 2) {
+  
+  population.sort((a, b) => b.fitness - a.fitness);
 
-  while (remainingPopulation.length >= 2) {
-    //const totalFitness = remainingPopulation.reduce((sum, individual) => sum + individual.fitness, 0);
-
-    /*if (totalFitness === 0) {
-      const [parent1, parent2] = remainingPopulation.splice(0, 2);
-      pairs.push([parent1, parent2]);
-      continue;
-    }*/
-
-    function selectParent(pop) {
-      const totalFit = pop.reduce((sum, individual) => sum + individual.fitness, 0);
-      const randomValue = Math.random() * totalFit;
-      let cumulativeFitness = 0;
-
-      for (let i = 0; i < pop.length; i++) {
-        cumulativeFitness += pop[i].fitness;
-        if (randomValue <= cumulativeFitness) {
-          return i; // Return the selected index
-        }
-      }
-      return pop.length - 1;
+  
+  const selectedPairs = [];
+  const eliteIndividuals = population.slice(0, eliteCount);
+  
+ 
+  let totalFitness = population.reduce((sum, individual) => sum + individual.fitness, 0);
+  
+  if (totalFitness === 0) {
+    
+    while (selectedPairs.length < population.length / 2) {
+      const randomParents = [
+        population[Math.floor(Math.random() * population.length)],
+        population[Math.floor(Math.random() * population.length)]
+      ];
+      selectedPairs.push(randomParents);
     }
-
-    // Select Parent 1
-    const index1 = selectParent(remainingPopulation);
-    const parent1 = remainingPopulation[index1];
-
-    // Remove Parent 1 from selection pool
-    remainingPopulation.splice(index1, 1);
-
-    // Select Parent 2 from the **updated** population
-    const index2 = selectParent(remainingPopulation);
-    const parent2 = remainingPopulation[index2];
-
-    // Remove Parent 2
-    remainingPopulation.splice(index2, 1);
-
-    pairs.push([parent1, parent2]);
+    return selectedPairs;
   }
 
-  console.log("Selected Parent Pairs:", pairs);
-  return pairs;
+  function selectParent() {
+    let randomValue = Math.random() * totalFitness;
+    let cumulativeFitness = 0;
+
+    for (const individual of population) {
+      cumulativeFitness += individual.fitness;
+      if (randomValue <= cumulativeFitness) {
+        return individual;
+      }
+    }
+    return population[population.length - 1]; // Fallback
+  }
+
+  // Select parents in pairs
+  while (selectedPairs.length < (population.length - eliteCount) / 2) {
+    let parent1 = selectParent();
+    let parent2 = selectParent();
+
+    // Ensure diversity (prevent selecting the same parent)
+    while (parent1 === parent2) {
+      parent2 = selectParent();
+    }
+
+    selectedPairs.push([parent1, parent2]);
+  }
+
+  //console.log("Selected Parent Pairs:", selectedPairs);
+  return [...selectedPairs, ...eliteIndividuals.map(e => [e, e])]; // Ensure elites remain in the population
 }

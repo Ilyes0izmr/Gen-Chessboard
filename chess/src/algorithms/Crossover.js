@@ -7,8 +7,8 @@ export function performCrossover(parentPairs, crossoverProbability, mutationProb
 
   for (const [parent1, parent2] of parentPairs) {
     const randomValue = Math.random();
-    if (randomValue < crossoverProbability) {
-      console.log(`Crossover occurred between Parent 1 and Parent 2`);
+    if (randomValue <= crossoverProbability) {
+      //console.log(`Crossover occurred between Parent 1 and Parent 2`);
 
       // Perform one-point crossover (split at the midpoint)
       const midpoint = Math.floor(parent1.vector.length / 2);
@@ -33,7 +33,7 @@ export function performCrossover(parentPairs, crossoverProbability, mutationProb
       const mutatedOffspring = performMutation([child1, child2], mutationProbability);
       offspring.push(...mutatedOffspring);
     } else {
-      console.log(`No crossover occurred between Parent 1 and Parent 2`);
+      //console.log(`No crossover occurred between Parent 1 and Parent 2`);
 
       // Add parents to next generation (deep copy to avoid reference issues)
       offspring.push(JSON.parse(JSON.stringify({ ...parent1, fitness: null }))); // Clone parent1
@@ -41,6 +41,6 @@ export function performCrossover(parentPairs, crossoverProbability, mutationProb
     }
   }
 
-  console.log('Resulting Offspring:', offspring);
+  //console.log('Resulting Offspring:', offspring);
   return offspring;
 }

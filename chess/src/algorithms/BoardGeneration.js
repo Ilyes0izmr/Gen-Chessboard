@@ -4,54 +4,47 @@ export function convertVectorToMatrix(vector) {
     throw new Error('Vector must have exactly 64 elements.');
   }
 
-  const matrix = [];
-  for (let i = 0; i < 8; i++) {
-    matrix.push(vector.slice(i * 8, (i + 1) * 8)); 
-  }
-  return matrix;
+  return Array.from({ length: 8 }, (_, i) => vector.slice(i * 8, (i + 1) * 8));
 }
+
 export function convertBoardToVector(board) {
-  const vector = new Array(64).fill(null); // Ensure a 64-element array
-
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      const index = row * 8 + col; // Convert (row, col) into 1D index
-      vector[index] = board[row][col]; // Assign value from the board
-    }
-  }
-
-  return vector;
-}
-export function generateRandomBoard() {
-  const rows = 8;
-  const cols = 8;
-  const board = Array.from({ length: rows }, () => Array(cols).fill(null));
-
-  
-  const upperHalfPieces = ['Q', 'Q', 'R', 'B', 'K'];
-  placePiecesRandomly(board, 0, 3, upperHalfPieces);
-
-  
-  const lowerHalfPieces = ['Q', 'Q', 'R', 'B', 'K'];
-  placePiecesRandomly(board, 4, 7, lowerHalfPieces);
-
-  
   if (!board || board.length !== 8 || board.some(row => row.length !== 8)) {
-    console.error('Invalid board generated:', board);
-    throw new Error('Failed to generate a valid chessboard.');
+    console.error('Invalid board structure:', board);
+    throw new Error('Board must be 8x8.');
   }
+  return board.flat();
+}
+
+export function generateRandomBoard() {
+  const board = Array.from({ length: 8 }, () => Array(8).fill(null));
+
+  // Upper and lower half piece distributions
+  placePiecesRandomly(board, 0, 3, ['Q', 'Q', 'R', 'B', 'K']);
+  placePiecesRandomly(board, 4, 7, ['Q', 'Q', 'R', 'B', 'K']);
 
   return board;
 }
+
 function placePiecesRandomly(board, startRow, endRow, pieces) {
-  let remainingPieces = [...pieces];
+  const positions = [];
   
-  while (remainingPieces.length > 0) {
-    const row = Math.floor(Math.random() * (endRow - startRow + 1)) + startRow;
-    const col = Math.floor(Math.random() * board[row].length);
-  
-    if (board[row][col] === null) {
-      board[row][col] = remainingPieces.pop();
+  for (let row = startRow; row <= endRow; row++) {
+    for (let col = 0; col < 8; col++) {
+      positions.push([row, col]);
     }
+  }
+
+  shuffleArray(positions); // Randomize possible positions
+  
+  for (const piece of pieces) {
+    const [row, col] = positions.pop();
+    board[row][col] = piece;
+  }
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
   }
 }

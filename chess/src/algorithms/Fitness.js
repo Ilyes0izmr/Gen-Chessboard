@@ -1,7 +1,13 @@
 export function calculateFitness(board) {
   const conflictCount = calculateConflicts(board);
-  const penalty = calculateColumnPenalty(board); 
-  console.log(`Total Conflicts: ${conflictCount}, Penalty: ${penalty}`);
+  const penalty = calculateBishopPenalty(board) + 
+                  calculateRookPenalty(board) + 
+                  calculateKnightPenalty(board) + 
+                  calculateQueenPenalty(board) +
+                  calculateRookQueenPenalty(board)+
+                  calculateBishopKnightPenalty(board);
+                
+  //console.log(`Total Conflicts: ${conflictCount}, Penalty: ${penalty}`);
   return 1 / (1 + conflictCount + penalty); 
 }
 export function calculateConflicts(board) {
@@ -18,7 +24,7 @@ export function calculateConflicts(board) {
   }
   return conflictCount;
 }
-function findConflictsForPiece(board, row, col, piece) {
+export function findConflictsForPiece(board, row, col, piece) {
   let conflictCount = 0;
 
   const movements = {
@@ -70,30 +76,154 @@ function findConflictsForPiece(board, row, col, piece) {
 
   return conflictCount;
 }
-function calculateColumnPenalty(board) {
+
+
+function calculateBishopPenalty(board) {
   let penalty = 0;
+  const mainDiagonalCounts = Array(15).fill(0);
+  const antiDiagonalCounts = Array(15).fill(0);
 
-  for (let i = 0; i < 8; i++) {
-    let queenCountInColumn = 0;
-    let queenCountInRow = 0;
-
-    for (let j = 0; j <8; j++) {
-       
-      if (board[j][i] === 'Q') {
-        queenCountInColumn++;
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === 'B') {
+        mainDiagonalCounts[row - col + 7]++;
+        antiDiagonalCounts[row + col]++;
       }
-
-      if (board[i][j] === 'Q') {
-        queenCountInRow++;
-      }
-    }
-
-    if (queenCountInColumn > 1) {
-      penalty += queenCountInColumn - 1;
-    }
-    if (queenCountInRow > 1) {
-      penalty += queenCountInRow - 1;
     }
   }
+
+  for (let i = 0; i < 15; i++) {
+    if (mainDiagonalCounts[i] > 1) penalty += mainDiagonalCounts[i] - 1;
+    if (antiDiagonalCounts[i] > 1) penalty += antiDiagonalCounts[i] - 1;
+  }
+
   return penalty;
 }
+function calculateRookPenalty(board) {
+  let penalty = 0;
+  const colCounts = Array(8).fill(0);
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === 'R') {
+        colCounts[col]++;
+      }
+    }
+  }
+
+  for (let col = 0; col < 8; col++) {
+    if (colCounts[col] > 1) penalty += colCounts[col] - 1;
+  }
+
+  return penalty;
+}
+function calculateKnightPenalty(board) {
+  let penalty = 0;
+  const knightMoves = [
+    [-2, -1], [-2, 1], [2, -1], [2, 1],
+    [-1, -2], [-1, 2], [1, -2], [1, 2],
+  ];
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === 'K') {
+        for (const [dx, dy] of knightMoves) {
+          const newRow = row + dx;
+          const newCol = col + dy;
+          if (
+            newRow >= 0 && newRow < 8 &&
+            newCol >= 0 && newCol < 8 &&
+            board[newRow][newCol] === 'K'
+          ) {
+            penalty++;
+          }
+        }
+      }
+    }
+  }
+
+  return penalty;
+}
+function calculateQueenPenalty(board) {
+  let penalty = 0;
+  const rowCounts = Array(8).fill(0);
+  const colCounts = Array(8).fill(0);
+  const mainDiagonalCounts = Array(15).fill(0); // Left to Right (\)
+  const antiDiagonalCounts = Array(15).fill(0); // Right to Left (/)
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === 'Q') {
+        rowCounts[row]++;
+        colCounts[col]++;
+        mainDiagonalCounts[row - col + 7]++;
+        antiDiagonalCounts[row + col]++;
+      }
+    }
+  }
+
+  for (let i = 0; i < 8; i++) {
+    if (rowCounts[i] > 1) penalty += rowCounts[i] - 1;
+    if (colCounts[i] > 1) penalty += colCounts[i] - 1;
+  }
+
+  for (let i = 0; i < 15; i++) {
+    if (mainDiagonalCounts[i] > 1) penalty += mainDiagonalCounts[i] - 1;
+    if (antiDiagonalCounts[i] > 1) penalty += antiDiagonalCounts[i] - 1;
+  }
+
+  return penalty;
+}
+function calculateRookQueenPenalty(board) {
+  let penalty = 0;
+  const colCounts = Array(8).fill(0);
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === 'R' || board[row][col] === 'Q') {
+        colCounts[col]++;
+      }
+    }
+  }
+
+  for (let col = 0; col < 8; col++) {
+    if (colCounts[col] > 1) penalty += colCounts[col] - 1;
+  }
+
+  return penalty;
+}
+
+function calculateBishopKnightPenalty(board) {
+  let penalty = 0;
+  const directions = [
+    [-1, 0], [1, 0], [0, -1], [0, 1] // Up, Down, Left, Right
+  ];
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === 'B') {
+        let hasKnightNeighbor = false;
+
+        for (const [dr, dc] of directions) {
+          const newRow = row + dr;
+          const newCol = col + dc;
+
+          if (
+            newRow >= 0 && newRow < 8 &&
+            newCol >= 0 && newCol < 8 &&
+            board[newRow][newCol] === 'K'
+          ) {
+            hasKnightNeighbor = true;
+            break;
+          }
+        }
+
+        if (!hasKnightNeighbor) penalty++;
+      }
+    }
+  }
+
+  return penalty;
+}
+
+

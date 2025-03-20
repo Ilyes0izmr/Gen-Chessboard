@@ -14,7 +14,7 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
   const [targetFitness, setTargetFitness] = useState(0);
   const [popSize, setPopSize] = useState(50);
   const [crossoverProbability, setCrossoverProbability] = useState(0.8);
-  const [mutationProbability, setMutationProbability] = useState(0.1);
+  const [mutationProbability, setMutationProbability] = useState(0.01);
 
  
   const handleMaxGenChange = (e) => {

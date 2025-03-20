@@ -18,12 +18,12 @@ export async function runGeneticAlgorithm({
 
   let population = generatePopulation(populationSize);  // we generate the initial population 
   let bestIndividual = null;                            // to track the best board found 
-  console.log(`Starting genetic algorithm with maxGenerations=${maxGenerations}, targetConflicts=${targetConflicts}, populationSize=${populationSize} ,proba=${crossoverProbability}, ${mutationProbability}`);
+  //console.log(`Starting genetic algorithm with maxGenerations=${maxGenerations}, targetConflicts=${targetConflicts}, populationSize=${populationSize} ,proba=${crossoverProbability}, ${mutationProbability}`);
 
   if (onMessageUpdate) onMessageUpdate("AI is thinking..."); //update the UI with a message
 
   for (let generation = 1; generation <= maxGenerations; generation++) {
-    console.log(`\n--- Generation ${generation} started ---`);
+    //console.log(`\n--- Generation ${generation} started ---`);
 
     
     population.forEach((individual) => {
@@ -45,10 +45,10 @@ export async function runGeneticAlgorithm({
       bestIndividual = currentBest;
     }
     // LOGS TO TRACK CONFLICTS 
-    console.log(`Best individual in generation ${generation}:`, {
+    /*console.log(`Best individual in generation ${generation}:`, {
       conflicts: bestIndividual.conflicts,
       fitness: bestIndividual.fitness,
-    });
+    });*/
     
 
     
@@ -65,7 +65,7 @@ export async function runGeneticAlgorithm({
 
     // Check stopping conditions
     if (currentBest.conflicts <= targetConflicts) {
-      console.log(`Target conflicts (${targetConflicts}) achieved in generation ${generation}. Stopping algorithm.`);
+      //console.log(`Target conflicts (${targetConflicts}) achieved in generation ${generation}. Stopping algorithm.`);
       if (onMessageUpdate) onMessageUpdate("AI finished calculation!");      //state messege
       return (bestIndividual.matrix);
     }
@@ -77,13 +77,13 @@ export async function runGeneticAlgorithm({
 
     population = offspring; // the new population 
 
-    console.log(`--- Generation ${generation} ended ---`);
+    //console.log(`--- Generation ${generation} ended ---`);
 
     // Introduce a delay to make updates visible
-    await sleep(5); // Delay of 5ms
+    await sleep(0); // Delay of 5ms
   }
 
-  console.log('Maximum generations reached. Returning best individual found.');
+  //console.log('Maximum generations reached. Returning best individual found.');
   if (onMessageUpdate) onMessageUpdate("AI finished calculation!"); // Notify completion
   return bestIndividual.matrix;
 }
