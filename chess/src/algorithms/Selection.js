@@ -1,74 +1,52 @@
-// src/algorithms/Selection.js
+export function rouletteWheelSelection(population, eliteCount = 2) {
+  
+  population.sort((a, b) => b.fitness - a.fitness);
 
-/**
- * Performs roulette wheel selection to select parent pairs **without replacement**.
- *
- * @param {Array<Object>} population - The population of individuals with fitness scores.
- * @returns {Array<Array<Object>>} - An array of parent pairs (couples).
- */
-export function rouletteWheelSelection(population) {
-  // Create a copy of the population to avoid mutating the original
-  let remainingPopulation = [...population];
-  const pairs = [];
-
-  // Continue pairing until fewer than 2 parents remain
-  while (remainingPopulation.length >= 2) {
-    // Step 1: Calculate total fitness for the remaining population
-    const totalFitness = remainingPopulation.reduce(
-      (sum, individual) => sum + individual.fitness,
-      0
-    );
-
-    // Step 2: Create a cumulative probability distribution
-    const cumulativeProbabilities = [];
-    let cumulativeProbability = 0;
-    for (const individual of remainingPopulation) {
-      cumulativeProbability += individual.fitness / totalFitness;
-      cumulativeProbabilities.push(cumulativeProbability);
+  
+  const selectedPairs = [];
+  const eliteIndividuals = population.slice(0, eliteCount);
+  
+ 
+  let totalFitness = population.reduce((sum, individual) => sum + individual.fitness, 0);
+  
+  if (totalFitness === 0) {
+    
+    while (selectedPairs.length < population.length / 2) {
+      const randomParents = [
+        population[Math.floor(Math.random() * population.length)],
+        population[Math.floor(Math.random() * population.length)]
+      ];
+      selectedPairs.push(randomParents);
     }
-
-    // Step 3: Select Parent 1
-    const randomValue1 = Math.random();
-    let selectedIndex1 = 0;
-    for (let i = 0; i < cumulativeProbabilities.length; i++) {
-      if (randomValue1 <= cumulativeProbabilities[i]) {
-        selectedIndex1 = i;
-        break;
-      }
-    }
-    const parent1 = remainingPopulation[selectedIndex1];
-    remainingPopulation = remainingPopulation.filter((_, index) => index !== selectedIndex1);
-
-    // Step 4: Select Parent 2 from the remaining population
-    if (remainingPopulation.length === 0) break;
-
-    const totalFitness2 = remainingPopulation.reduce(
-      (sum, individual) => sum + individual.fitness,
-      0
-    );
-    const cumulativeProbabilities2 = [];
-    let cumulativeProbability2 = 0;
-    for (const individual of remainingPopulation) {
-      cumulativeProbability2 += individual.fitness / totalFitness2;
-      cumulativeProbabilities2.push(cumulativeProbability2);
-    }
-
-    const randomValue2 = Math.random();
-    let selectedIndex2 = 0;
-    for (let i = 0; i < cumulativeProbabilities2.length; i++) {
-      if (randomValue2 <= cumulativeProbabilities2[i]) {
-        selectedIndex2 = i;
-        break;
-      }
-    }
-    const parent2 = remainingPopulation[selectedIndex2];
-    remainingPopulation = remainingPopulation.filter(
-      (_, index) => index !== selectedIndex2
-    );
-
-    pairs.push([parent1, parent2]);
+    return selectedPairs;
   }
 
-  console.log('Selected Parent Pairs:', pairs);
-  return pairs;
+  function selectParent() {
+    let randomValue = Math.random() * totalFitness;
+    let cumulativeFitness = 0;
+
+    for (const individual of population) {
+      cumulativeFitness += individual.fitness;
+      if (randomValue <= cumulativeFitness) {
+        return individual;
+      }
+    }
+    return population[population.length - 1]; // Fallback
+  }
+
+  // Select parents in pairs
+  while (selectedPairs.length < (population.length - eliteCount) / 2) {
+    let parent1 = selectParent();
+    let parent2 = selectParent();
+
+    // Ensure diversity (prevent selecting the same parent)
+    while (parent1 === parent2) {
+      parent2 = selectParent();
+    }
+
+    selectedPairs.push([parent1, parent2]);
+  }
+
+  //console.log("Selected Parent Pairs:", selectedPairs);
+  return [...selectedPairs, ...eliteIndividuals.map(e => [e, e])]; // Ensure elites remain in the population
 }

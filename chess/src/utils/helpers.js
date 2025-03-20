@@ -1,5 +1,3 @@
-// src/utils/helpers.js
-
 /**
  * Pauses execution for a specified number of milliseconds.
  *
@@ -8,4 +6,4 @@
  */
 export function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+}
