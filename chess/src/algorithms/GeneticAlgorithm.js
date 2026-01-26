@@ -3,7 +3,7 @@ import { calculateConflicts, calculateFitness } from './Fitness';
 import { convertBoardToVector, generateRandomBoard } from './BoardGeneration';
 import { rouletteWheelSelection } from './Selection';
 import { performCrossover } from './Crossover';
-//import { performMutation } from './Mutation';
+import { performMutation } from './Mutation';
 import { sleep } from '../utils/helpers'; 
 
 export async function runGeneticAlgorithm({
@@ -73,9 +73,9 @@ export async function runGeneticAlgorithm({
     
     const parentPairs = rouletteWheelSelection(population);  //selection 
     const offspring = performCrossover(parentPairs, crossoverProbability); // crossover 
-    //const mutatedOffspring = performMutation(offspring, mutationProbability); // mutation (it i sincluded in the crossover function)
+    const mutatedOffspring = performMutation(offspring, mutationProbability); // mutation (it i sincluded in the crossover function)
 
-    population = offspring; // the new population 
+    population = mutatedOffspring; // the new population 
 
     //console.log(`--- Generation ${generation} ended ---`);
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Cell from "./Cell";
 import { RiRestartLine } from "react-icons/ri";
 
-import loader from "../assets/load.gif";
+//import loader from "../assets/load.gif";
 import { LuLoader2 } from "react-icons/lu";
 
 const Board = ({
