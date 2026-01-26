@@ -1,0 +1,22 @@
+/* The square itself glows red */
+.square.conflict-glow {
+  background-color: rgba(255, 0, 0, 0.2) !important;
+  box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.5);
+  transition: background-color 0.1s ease;
+  z-index: 5;
+}
+
+/* The piece vibrates and glows red */
+.piece-in-conflict {
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8)) brightness(1.2);
+  animation: conflict-jitter 0.1s infinite;
+}
+
+/* A fast, aggressive vibration effect */
+@keyframes conflict-jitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1px, -1px); }
+  50% { transform: translate(-1px, 1px); }
+  75% { transform: translate(1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
