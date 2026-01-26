@@ -1,69 +1,58 @@
 import React, { useState, useRef } from "react";
 import Chessboard from "../components/Chessboard";
 import Controls from "../components/Controls";
-import { runGeneticAlgorithm } from "../algorithms/GeneticAlgorithm";
-import { sleep } from "../utils/helpers";
 import "./Home.css";
 
 const Home = () => {
   const [board, setBoard] = useState(null);
   const [conflicts, setConflicts] = useState(0);
+  const [conflictSquares, setConflictSquares] = useState([]);
   const [message, setMessage] = useState("press start...");
-  const isRunning = useRef(false);
+
   const workerRef = useRef(null);
 
-  const handleStart = async ({
-    maxGen,
-    targetFitness,
-    popSize,
-    crossoverProbability,
-    mutationProbability,
-  }) => {
-    console.log("Starting algorithm with:", {
-      maxGen,
-      targetFitness,
-      popSize,
-      crossoverProbability,
-      mutationProbability,
-    });
-    if (isRunning.current) return;
-    isRunning.current = true;
-    setMessage("AI is still thinking...");
-    try {
-      await runGeneticAlgorithm({
-        maxGenerations: maxGen,
-        targetConflicts: targetFitness,
-        populationSize: popSize,
-        crossoverProbability,
-        mutationProbability,
-        shouldContinue: () => isRunning.current,
-        onGenerationComplete: async (
-          generation,
-          bestBoardSoFar,
-          bestConflicts,
-        ) => {
-          if (!isRunning.current) return;
-          console.log(`Generation ${generation}`);
-          setBoard(JSON.parse(JSON.stringify(bestBoardSoFar)));
-          setConflicts(bestConflicts);
-          await sleep(0);
-        },
-        onMessageUpdate: (newMessage) => {
-          setMessage(newMessage);
-        },
-      });
-    } catch (error) {
-      console.error("Error running genetic algorithm:", error);
-    } finally {
-      isRunning.current = false;
-    }
+  const handleStart = (params) => {
+    if (workerRef.current) workerRef.current.terminate();
+
+    workerRef.current = new Worker(
+      new URL("../utils/genetic.worker.js", import.meta.url),
+      { type: "module" },
+    );
+
+    workerRef.current.onmessage = (e) => {
+      const {
+        type,
+        matrix,
+        conflicts: workerConflicts,
+        conflictSquares: workerPaths,
+        message: workerMsg,
+      } = e.data;
+
+      if (type === "PROGRESS") {
+        setBoard(matrix);
+        setConflicts(workerConflicts);
+        setConflictSquares(workerPaths || []);
+      } else if (type === "MESSAGE") {
+        setMessage(workerMsg);
+      } else if (type === "FINISHED") {
+        workerRef.current = null;
+      }
+    };
+
+    workerRef.current.onerror = (err) => {
+      console.error("Worker Error:", err);
+      setMessage("Error: AI thread crashed.");
+    };
+
+    workerRef.current.postMessage(params);
   };
 
   const handleReset = () => {
-    console.log("Resetting board...");
+    if (workerRef.current) workerRef.current.terminate();
+    workerRef.current = null;
     setBoard(null);
     setConflicts(0);
-    isRunning.current = false;
+    setConflictSquares([]);
     setMessage("press start...");
   };
 
@@ -71,11 +60,9 @@ const Home = () => {
     <div className="home-container">
       <h1>Chess Genetic Algorithm</h1>
       <div className="main-layout">
-        {/* Pass the board state to Chessboard */}
         <div className="chessboard-container">
-          <Chessboard board={board} />
+          <Chessboard board={board} conflictSquares={conflictSquares} />
         </div>
-        {/* Pass onStart, onReset, conflicts, and message as props */}
         <div className="controls-container">
           <Controls
             onStart={handleStart}

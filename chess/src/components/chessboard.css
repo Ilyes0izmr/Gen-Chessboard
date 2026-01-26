@@ -1,7 +1,21 @@
-/* Highlight conflicting cells */
+/* The square background */
 .square.conflict {
-  background-color: #FF6F61 !important; /* Bright red for conflicts */
-  border: 2px solid #FF0000; /* Red border for emphasis */
+  background-color: rgba(255, 69, 58, 0.25) !important; /* Soft Red Glass */
+  box-shadow: inset 0 0 10px rgba(255, 69, 58, 0.4);
+  position: relative;
+}
+
+/* Add a pulse effect to pieces sitting on conflict squares */
+.square.conflict .piece {
+  filter: drop-shadow(0 0 5px rgba(255, 69, 58, 0.8));
+  animation: piece-vibrate 0.1s infinite;
+}
+
+@keyframes piece-vibrate {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0, 0); }
 }
 
 /* Default square styles */
