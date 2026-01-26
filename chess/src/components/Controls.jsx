@@ -1,22 +1,20 @@
-import { useState } from 'react';
-import startIcon from '../assets/start.png';
-import stopIcon from '../assets/reset.png';  
-import generationsIcon from '../assets/generations-icon.png'; 
-import targetIcon from '../assets/target-icon.png';           
-import populationIcon from '../assets/population-icon.png';   
-import crossoverIcon from '../assets/crossover-icon.png';     
-import mutationIcon from '../assets/mutation-icon.png';      
-import './Controls.css';
+import { useState } from "react";
+import startIcon from "../assets/start.png";
+import stopIcon from "../assets/reset.png";
+import generationsIcon from "../assets/generations-icon.png";
+import targetIcon from "../assets/target-icon.png";
+import populationIcon from "../assets/population-icon.png";
+import crossoverIcon from "../assets/crossover-icon.png";
+import mutationIcon from "../assets/mutation-icon.png";
+import "./Controls.css";
 
 const Controls = ({ onStart, onStop, conflicts, message }) => {
-
   const [maxGen, setMaxGen] = useState(50);
   const [targetFitness, setTargetFitness] = useState(0);
   const [popSize, setPopSize] = useState(50);
   const [crossoverProbability, setCrossoverProbability] = useState(0.8);
   const [mutationProbability, setMutationProbability] = useState(0.01);
 
- 
   const handleMaxGenChange = (e) => {
     const value = parseInt(e.target.value, 10);
     setMaxGen(isNaN(value) ? 10 : value);
@@ -36,12 +34,16 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
 
   const handleCrossoverProbabilityChange = (e) => {
     const value = parseFloat(e.target.value);
-    setCrossoverProbability(isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value);
+    setCrossoverProbability(
+      isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value,
+    );
   };
 
   const handleMutationProbabilityChange = (e) => {
     const value = parseFloat(e.target.value);
-    setMutationProbability(isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value);
+    setMutationProbability(
+      isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value,
+    );
   };
 
   return (
@@ -50,7 +52,7 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
         {/* Max Generations */}
         <div className="input-group">
           <img src={generationsIcon} alt="Generations" className="icon" />
-          <label htmlFor="maxGen">  Max Gens</label>
+          <label htmlFor="maxGen"> Max Gens</label>
           <input
             type="number"
             id="maxGen"
@@ -62,7 +64,7 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
         {/* Target Fitness */}
         <div className="input-group">
           <img src={targetIcon} alt="Target Fitness" className="icon" />
-          <label htmlFor="targetFitness">  Target Fitness</label>
+          <label htmlFor="targetFitness"> Target Fitness</label>
           <input
             type="number"
             id="targetFitness"
@@ -74,7 +76,7 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
         {/* Population Size */}
         <div className="input-group">
           <img src={populationIcon} alt="Population Size" className="icon" />
-          <label htmlFor="popSize">  Population Size</label>
+          <label htmlFor="popSize"> Population Size</label>
           <input
             type="number"
             id="popSize"
@@ -85,8 +87,12 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
 
         {/* Crossover Probability */}
         <div className="input-group">
-          <img src={crossoverIcon} alt="Crossover Probability" className="icon" />
-          <label htmlFor="crossoverProbability">  Crossover %</label>
+          <img
+            src={crossoverIcon}
+            alt="Crossover Probability"
+            className="icon"
+          />
+          <label htmlFor="crossoverProbability"> Crossover %</label>
           <input
             type="number"
             step="0.01"
@@ -99,7 +105,7 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
         {/* Mutation Probability */}
         <div className="input-group">
           <img src={mutationIcon} alt="Mutation Probability" className="icon" />
-          <label htmlFor="mutationProbability">  Mutation %</label>
+          <label htmlFor="mutationProbability"> Mutation %</label>
           <input
             type="number"
             step="0.01"

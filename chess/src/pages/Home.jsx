@@ -1,60 +1,70 @@
-import React, { useState } from 'react';
-import Chessboard from '../components/Chessboard';
-import Controls from '../components/Controls';
-import { runGeneticAlgorithm } from '../algorithms/GeneticAlgorithm';
-import { sleep } from '../utils/helpers'; 
-import './Home.css';
+import React, { useState, useRef } from "react";
+import Chessboard from "../components/Chessboard";
+import Controls from "../components/Controls";
+import { runGeneticAlgorithm } from "../algorithms/GeneticAlgorithm";
+import { sleep } from "../utils/helpers";
+import "./Home.css";
 
 const Home = () => {
- 
   const [board, setBoard] = useState(null);
-  const [conflicts, setConflicts] = useState(0); 
-  const [message, setMessage] = useState("press start..."); 
+  const [conflicts, setConflicts] = useState(0);
+  const [message, setMessage] = useState("press start...");
+  const isRunning = useRef(false);
+  const workerRef = useRef(null);
 
- 
-  const handleStart = async ({maxGen,targetFitness,popSize,crossoverProbability,mutationProbability,}) => {
-    console.log('Starting algorithm with:', {
+  const handleStart = async ({
+    maxGen,
+    targetFitness,
+    popSize,
+    crossoverProbability,
+    mutationProbability,
+  }) => {
+    console.log("Starting algorithm with:", {
       maxGen,
       targetFitness,
       popSize,
       crossoverProbability,
       mutationProbability,
     });
-
+    if (isRunning.current) return;
+    isRunning.current = true;
+    setMessage("AI is still thinking...");
     try {
-      
       await runGeneticAlgorithm({
         maxGenerations: maxGen,
         targetConflicts: targetFitness,
         populationSize: popSize,
         crossoverProbability,
-        mutationProbability, 
-        onGenerationComplete: async (generation, bestBoardSoFar, bestConflicts) => {
-         console.log(`Generation ${generation}`);
-
-         
-          setBoard((prevBoard) => {
-            //console.log('Updating board state:', bestBoardSoFar);
-            return JSON.parse(JSON.stringify(bestBoardSoFar)); 
-          });
-          setConflicts(bestConflicts); 
-          await sleep(0); 
+        mutationProbability,
+        shouldContinue: () => isRunning.current,
+        onGenerationComplete: async (
+          generation,
+          bestBoardSoFar,
+          bestConflicts,
+        ) => {
+          if (!isRunning.current) return;
+          console.log(`Generation ${generation}`);
+          setBoard(JSON.parse(JSON.stringify(bestBoardSoFar)));
+          setConflicts(bestConflicts);
+          await sleep(0);
         },
         onMessageUpdate: (newMessage) => {
-          setMessage(newMessage); 
+          setMessage(newMessage);
         },
       });
     } catch (error) {
-      console.error('Error running genetic algorithm:', error);
+      console.error("Error running genetic algorithm:", error);
+    } finally {
+      isRunning.current = false;
     }
   };
 
-  
   const handleReset = () => {
-    console.log('Resetting board...');
-    setBoard(null); 
-    setConflicts(0); 
-    setMessage("press start..."); 
+    console.log("Resetting board...");
+    setBoard(null);
+    setConflicts(0);
+    isRunning.current = false;
+    setMessage("press start...");
   };
 
   return (
@@ -67,7 +77,12 @@ const Home = () => {
         </div>
         {/* Pass onStart, onReset, conflicts, and message as props */}
         <div className="controls-container">
-          <Controls onStart={handleStart} onStop={handleReset} conflicts={conflicts} message={message} />
+          <Controls
+            onStart={handleStart}
+            onStop={handleReset}
+            conflicts={conflicts}
+            message={message}
+          />
         </div>
       </div>
     </div>
