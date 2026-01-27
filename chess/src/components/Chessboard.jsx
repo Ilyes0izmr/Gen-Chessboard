@@ -1,5 +1,3 @@
-// src/components/Chessboard.jsx
-import React, { useEffect } from "react";
 import Square from "./Square";
 import "./Chessboard.css";
 
@@ -11,7 +9,6 @@ const Chessboard = ({ board, conflictSquares = [] }) => {
     return currentBoard.map((row, rowIndex) => (
       <div key={rowIndex} className="chessboard-row">
         {row.map((piece, colIndex) => {
-          // Check if this specific square is in the conflict list
           const isConflict = conflictSquares.some(
             ([r, c]) => r === rowIndex && c === colIndex,
           );
@@ -21,7 +18,7 @@ const Chessboard = ({ board, conflictSquares = [] }) => {
               key={`${rowIndex}-${colIndex}`}
               isDark={(rowIndex + colIndex) % 2 === 0}
               piece={piece}
-              isConflict={isConflict} // Pass this to the square
+              isConflict={isConflict}
             />
           );
         })}

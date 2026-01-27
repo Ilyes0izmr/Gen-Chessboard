@@ -58,10 +58,11 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <h1>Chess Genetic Algorithm</h1>
       <div className="main-layout">
         <div className="chessboard-container">
-          <Chessboard board={board} conflictSquares={conflictSquares} />
+          <div className="chessboard-rim-outlier">
+            <Chessboard board={board} conflictSquares={conflictSquares} />
+          </div>
         </div>
         <div className="controls-container">
           <Controls
