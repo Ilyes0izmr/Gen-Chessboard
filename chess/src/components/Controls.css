@@ -1,16 +1,16 @@
 :root {
-    /* color Palette */
-    --primary-bg: #1E1240;
-    --secondary-bg: #3A1D6E;
-    --accent-color: #836FFF;
-    --highlight-color: #15F5BA;
-    --hover-color: #5025A5;
-    --text-color: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.2);
-    --hover-shadow-color: rgba(0, 0, 0, 0.3);
+    /* Monochromatic Neo Palette */
+    --primary-bg: #dcdcdc;       /* Base surface color */
+    --secondary-bg: #e3e3e3;     /* Raised element color */
+    --accent-color: #ffffff;      /* Light source (Top-Left) */
+    --soft-shadow: rgba(0, 0, 0, 0.15); /* Shadow (Bottom-Right) */
     
-    /* font Sizes */
-    --font-small: 0.9rem;
+    /* Text & Status */
+    --text-color: #444444;       /* Soft dark grey for readability */
+    --highlight-color: #15F5BA;  /* Keep as a tiny 'active' LED dot only */
+    
+    /* Font Sizes */
+    --font-small: 0.85rem;
     --font-medium: 1rem;
 }
 

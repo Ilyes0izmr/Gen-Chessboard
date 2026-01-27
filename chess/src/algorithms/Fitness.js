@@ -1,10 +1,8 @@
-// src/algorithms/Fitness.js
-
 export function calculateFitness(board) {
-  // 1. Get conflicts and the specific squares involved using your Set logic
+
   const { totalConflicts, conflictSquares } = calculateConflictsWithData(board);
 
-  // 2. Calculate heuristic penalties
+
   const penalty = calculateBishopPenalty(board) + 
                   calculateRookPenalty(board) + 
                   calculateKnightPenalty(board) + 
@@ -12,7 +10,7 @@ export function calculateFitness(board) {
                   calculateRookQueenPenalty(board) +
                   calculateBishopKnightPenalty(board);
                 
-  // 3. Return the full object exactly as requested
+  
   return {
     fitness: 1 / (1 + totalConflicts + penalty),
     conflicts: totalConflicts,
@@ -23,26 +21,25 @@ export function calculateFitness(board) {
 export function calculateConflictsWithData(board) {
   let totalConflicts = 0;
   const conflictSquares = [];
-  const checkedPairs = new Set(); // Using the Set exactly like your original logic
+  const checkedPairs = new Set(); 
 
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       const piece = board[row][col];
       if (piece) {
-        // Pass the Set into the helper to manage global pairs
+        
         const result = findConflictsForPiece(board, row, col, piece, checkedPairs);
         
         totalConflicts += result.count;
         
         if (result.squares.length > 0) {
           conflictSquares.push(...result.squares);
-          conflictSquares.push([row, col]); // Highlight the piece that is part of the conflict
+          conflictSquares.push([row, col]);
         }
       }
     }
   }
 
-  // No "/ 2" here, as the Set logic ensures we only count unique pairs
   return { 
     totalConflicts: totalConflicts, 
     conflictSquares: conflictSquares 
@@ -99,7 +96,7 @@ export function findConflictsForPiece(board, row, col, piece, checkedPairs) {
   return { count, squares };
 }
 
-// --- Penalty Functions (Keep exactly as they were) ---
+
 
 function calculateBishopPenalty(board) {
   let penalty = 0;
