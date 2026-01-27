@@ -31,133 +31,184 @@ html, body {
   background-attachment: fixed;
 }
 
-/* 2. THE GLASS PANEL */
+/* 2. THE MAIN LAYOUT (Flex Column) */
 .main-layout {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  padding: 20px;
-  background: rgba(39, 77, 133, 0.034); 
-  -webkit-backdrop-filter: blur(15px) saturate(160%);
-  backdrop-filter: blur(15px) saturate(160%);
-  border-radius: 20px; 
+  flex-direction: column; 
+  width: fit-content;    
+  padding: 30px;
+  background: rgba(221, 221, 221, 0.925); 
+  border-radius: 32px; 
+  gap: 25px; 
 
-  border-top: 1.5px solid rgba(255, 255, 255, 0.575);
-  border-left: 1.5px solid rgba(255, 255, 255, 0.555);
-  border-right: 1.5px solid rgba(204, 204, 204, 0.712);
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 
+    -5px -5px 10px var(--light-highlight),
+    5px 5px 10px var(--soft-shadow);
   
-  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 2;
 }
 
-/* 3. THE OUTER TABLE (Level 1: Grounded) */
+/* 3. NAVBAR */
+.navbar-container {
+  width: 100%;
+  height: 60px;
+  flex: none;
+  background: rgba(230, 230, 230, 0.5);
+  border-radius: 16px;
+  box-sizing: border-box;
+  
+  box-shadow: 
+    inset -2px -2px 5px var(--light-highlight),
+    inset 2px 2px 5px var(--soft-shadow);
+    
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* 4. CONTENT AREA (Flex Row) */
+.content-area {
+  display: flex;
+  flex-direction: row;    
+  align-items: flex-start;
+  gap: 30px;              
+}
+
+.controls-container {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 5. THE CHESSBOARD COMPONENTS */
 .chessboard-container {
   flex: none;
-  width: 540px; 
+  width: 440px;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color:rgba(221, 221, 221, 0); 
-  border-radius: 24px;
-
-  /* THE "UPWARD" EXTRUSION */
-  /* Top-left light, Bottom-right shadow */
-  /*box-shadow: 
-    12px 12px 5px var(--soft-shadow), 
-    -5px -5px -10px var(--light-highlight);
-
-  /* Precise white rim to catch the light on the top edge */
-  /*border: 2px solid rgba(255, 255, 255, 0.137);*/
-  
   position: relative;
-  z-index: 10;
 }
 
-/* 4. THE RAISED RIM / OUTLIER (Level 2: Physically UP) */
-/* This is the 'Border' you see going up in image_a045b7 */
 .chessboard-rim-outlier {
-  width: 90%;
-  height: 90%;
-  background-color: var(--board-color);
-  border-radius: 20px; 
-  padding: 0px; /* Precision thickness of the raised rim */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(228, 228, 228, 0.925);
+  border-radius: 10px; 
+  padding: 12px; 
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* Extrusion effect with top-left light source */
+  box-sizing: border-box;
+  z-index: 10;
+  overflow: visible !important;
   box-shadow: 
-    12px 12px 24px var(--soft-shadow), 
-    15px 15px 15px var(--light-highlight),
-    inset 1px 1px 1px var(--light-highlight);
-    
-  border: 10px solid rgba(255, 255, 255, 0.267);
+    -5px -5px 10px var(--light-highlight),
+    5px 5px 10px var(--soft-shadow);
 }
 
-/* 5. THE SUNKEN GRID BASE (Level 3: Physically DOWN) */
 .chessboard {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--board-color);
-  border-radius: 12px; 
-  overflow: hidden;
-  
-  /* Carve-out effect - dark on top-left, light on bottom-right */
+  border-radius: 15px; 
+  box-sizing: border-box;
+  overflow: visible !important;
+  z-index: 1;
   box-shadow: 
-    inset 10px 10px 20px rgba(0, 0, 0, 0.12), 
-    inset -8px -8px 16px var(--light-highlight);
-    
-  border: 1px solid rgba(0, 0, 0, 0.05);
+    inset -8px -8px 20px 0px var(--light-highlight),
+    inset 8px 8px 10px 0px rgba(44, 44, 44, 0.055); 
 }
 
-/* 6. THE SQUARES (Level 4: Molded texture) */
 .chessboard-row {
   display: flex;
   width: 100%;
-  height: 12.5%;
+  height: 12.5%; 
+  overflow: visible;
 }
 
 .square {
-  width: 12.5%;
+  width: 12.5%; /* Precisely 1/8th of the square width */
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-}
-
-/* Light Square: Physically UP */
-.square.light {
-  background-color: #ececec;
-  box-shadow: 2px 2px 4px var(--soft-shadow),
-              -1px -1px 2px var(--light-highlight);
+  box-sizing: border-box;
   z-index: 2;
-  border-radius: 2px;
+  overflow: visible !important;
+  border-radius: 1px;
 }
 
-/* Dark Square: Physically DOWN */
+/* 6. SQUARES & PIECES */
+.square.light {
+  background-color: rgba(228, 228, 228, 0.925);
+  box-shadow: -2px -2px -4px 1px var(--light-highlight), 
+  -10px -10px -4px var(--soft-shadow);
+  z-index: 5;
+}
+
 .square.dark {
-  background-color: #d6d6d6;
+  background-color: rgba(211, 211, 211, 0.925); 
   box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.08), 
-    inset -1px -1px 2px var(--light-highlight);
-  z-index: 1;
+    inset -2px -2px 6px 2px var(--light-highlight),
+    inset 2px 2px 6px 2px var(--soft-shadow);
+  z-index: 5;
 }
 
-/* 7. FEEDBACK */
+.chess-piece {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  
+  transform: scale(1.1);
+  
+  z-index: 2;
+  
+  filter: drop-shadow(2px 4px 6px rgba(26, 26, 26, 0.397));
+  
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; /*1056 992*/
+  pointer-events: none; 
+}
+
+/*7. FEEDBACK & ANIMATIONS */
 .square.conflict-glow {
-  background-color: rgba(255, 69, 58, 0.15) !important;
-  box-shadow: inset 0 0 12px rgba(255, 69, 58, 0.3) !important;
+  background-color: rgba(18, 18, 54, 0.466) !important;
+  transition: background-color 0.2s ease;
+}
+
+.square.light.conflict-glow {
+  background-color: rgba(15, 23, 44, 0.541) !important;
+}
+
+.square.dark.conflict-glow {
+  background-color: rgba(14, 17, 36, 0.55) !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(50, 70, 130, 0.3), 
+    inset 2px 2px 6px rgba(27, 27, 27, 0.568) !important;
 }
 
 .piece-in-conflict {
-  filter: drop-shadow(0 0 8px rgba(255, 69, 58, 0.6));
-  animation: piece-vibrate 0.12s infinite linear;
-  max-width: 85%;
-  max-height: 85%;
+  transform: scale(1.1); 
+
+  filter: drop-shadow(0 0 12px rgba(41, 41, 41, 0.884)) brightness(0.9);
+  animation: piece-vibrate 0.3s infinite linear;
+  z-index: 1000;
+}
+
+@keyframes piece-vibrate {
+
+  0% { transform: scale(1.2) translate(0, 0); }
+  25% { transform: scale(1.2) translate(0.8px, -0.8px); }
+  75% { transform: scale(1.2) translate(-0.8px, 0.8px); }
+  100% { transform: scale(1.2) translate(0, 0); }
 }
 
 @keyframes piece-vibrate {

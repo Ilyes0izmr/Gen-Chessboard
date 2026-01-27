@@ -48,6 +48,7 @@ const Controls = ({ onStart, onStop, conflicts, message }) => {
 
   return (
     <div className="controls">
+      <div className="navbar"></div>
       <div className="sidebar">
         {/* Max Generations */}
         <div className="input-group">

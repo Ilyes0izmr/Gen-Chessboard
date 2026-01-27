@@ -59,18 +59,25 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="main-layout">
-        <div className="chessboard-container">
-          <div className="chessboard-rim-outlier">
-            <Chessboard board={board} conflictSquares={conflictSquares} />
+        {/* Top: Navbar */}
+        <div className="navbar-container">{/* Navbar links go here */}</div>
+
+        {/* Bottom: Component 2 (Horizontal Row) */}
+        <div className="content-area">
+          <div className="chessboard-container">
+            <div className="chessboard-rim-outlier">
+              <Chessboard board={board} conflictSquares={conflictSquares} />
+            </div>
           </div>
-        </div>
-        <div className="controls-container">
-          <Controls
-            onStart={handleStart}
-            onStop={handleReset}
-            conflicts={conflicts}
-            message={message}
-          />
+
+          <div className="controls-container">
+            <Controls
+              onStart={handleStart}
+              onStop={handleReset}
+              conflicts={conflicts}
+              message={message}
+            />
+          </div>
         </div>
       </div>
     </div>
