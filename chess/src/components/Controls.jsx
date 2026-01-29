@@ -1,152 +1,168 @@
-import { useState } from "react";
-import startIcon from "../assets/start.png";
-import stopIcon from "../assets/reset.png";
-import generationsIcon from "../assets/generations-icon.png";
-import targetIcon from "../assets/target-icon.png";
-import populationIcon from "../assets/population-icon.png";
-import crossoverIcon from "../assets/crossover-icon.png";
-import mutationIcon from "../assets/mutation-icon.png";
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLayerGroup,
+  faBullseye,
+  faUsers,
+  faScissors,
+  faDna,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Controls.css";
 
-const Controls = ({ onStart, onStop, conflicts, message }) => {
+const ProgressWatch = ({ currentGen, maxGen, conflicts, targetFitness }) => {
+  const isFinished = currentGen > 0 && conflicts <= targetFitness;
+
+  const percentage = isFinished
+    ? 100
+    : currentGen === 0
+      ? 0
+      : Math.min(100, Math.round((currentGen / maxGen) * 100));
+
+  const radius = 35;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
+
+  return (
+    <div className="watch-container">
+      {/* Add finished class for the gold/green glow we discussed */}
+      <div className={`watch-face ${isFinished ? "finished" : ""}`}>
+        <svg className="watch-svg" viewBox="0 0 100 100">
+          <circle className="watch-track" cx="50" cy="50" r={radius} />
+          <circle
+            className="watch-progress"
+            cx="50"
+            cy="50"
+            r={radius}
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+          />
+        </svg>
+        <div className="watch-display">
+          <span className="watch-percent">{percentage}%</span>
+          <span className="watch-label">
+            {isFinished ? "SOLVED" : "PROGRESS"}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
   const [maxGen, setMaxGen] = useState(50);
   const [targetFitness, setTargetFitness] = useState(0);
   const [popSize, setPopSize] = useState(50);
   const [crossoverProbability, setCrossoverProbability] = useState(0.8);
   const [mutationProbability, setMutationProbability] = useState(0.01);
 
-  const handleMaxGenChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    setMaxGen(isNaN(value) ? 10 : value);
-  };
-
-  const handleTargetFitnessChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    setTargetFitness(isNaN(value) ? 0 : value);
-  };
-
-  const handlePopulationChange = (e) => {
-    let value = parseInt(e.target.value, 10);
-    if (isNaN(value)) value = 10;
-    if (value % 2 !== 0) value += 1;
-    setPopSize(value);
-  };
-
-  const handleCrossoverProbabilityChange = (e) => {
-    const value = parseFloat(e.target.value);
-    setCrossoverProbability(
-      isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value,
-    );
-  };
-
-  const handleMutationProbabilityChange = (e) => {
-    const value = parseFloat(e.target.value);
-    setMutationProbability(
-      isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value,
-    );
-  };
+  useEffect(() => {
+    onSettingsChange({
+      maxGen,
+      targetFitness,
+      popSize,
+      crossoverProbability,
+      mutationProbability,
+    });
+  }, [
+    maxGen,
+    targetFitness,
+    popSize,
+    crossoverProbability,
+    mutationProbability,
+    onSettingsChange,
+  ]);
 
   return (
     <div className="controls">
       <div className="sidebar">
+        {/* Place it right at the top for maximum visibility */}
+
         {/* Max Generations */}
         <div className="input-group">
-          <img src={generationsIcon} alt="Generations" className="icon" />
-          <label htmlFor="maxGen"> Max Gens</label>
+          <FontAwesomeIcon icon={faLayerGroup} className="fa-icon" />
+          <label>Max Generation</label>
           <input
             type="number"
-            id="maxGen"
+            className="neo-number-input"
             value={maxGen}
-            onChange={handleMaxGenChange}
-          />
-        </div>
-
-        {/* Target Fitness */}
-        <div className="input-group">
-          <img src={targetIcon} alt="Target Fitness" className="icon" />
-          <label htmlFor="targetFitness"> Target Fitness</label>
-          <input
-            type="number"
-            id="targetFitness"
-            value={targetFitness}
-            onChange={handleTargetFitnessChange}
+            onChange={(e) => setMaxGen(parseInt(e.target.value) || 0)}
           />
         </div>
 
         {/* Population Size */}
         <div className="input-group">
-          <img src={populationIcon} alt="Population Size" className="icon" />
-          <label htmlFor="popSize"> Population Size</label>
+          <FontAwesomeIcon icon={faUsers} className="fa-icon" />
+          <label>Population Size </label>
           <input
             type="number"
-            id="popSize"
+            className="neo-number-input"
+            min="50"
+            step="50"
             value={popSize}
-            onChange={handlePopulationChange}
+            onChange={(e) => setPopSize(parseInt(e.target.value) || 0)}
           />
         </div>
 
-        {/* Crossover Probability */}
-        <div className="input-group">
-          <img
-            src={crossoverIcon}
-            alt="Crossover Probability"
-            className="icon"
+        {/* Target Fitness Slider */}
+        <div className="input-group-slider">
+          <div className="slider-header">
+            <FontAwesomeIcon icon={faBullseye} className="fa-icon" />
+            <label htmlFor="targetFitness">Target Fitness</label>
+            <span className="slider-value">{targetFitness}</span>
+          </div>
+          <input
+            type="range"
+            id="targetFitness"
+            min="0"
+            max="16"
+            step="1"
+            className="neomorphic-slider"
+            value={targetFitness}
+            onChange={(e) => setTargetFitness(parseInt(e.target.value))}
           />
-          <label htmlFor="crossoverProbability"> Crossover %</label>
+        </div>
+
+        {/* Probabilities */}
+        <div className="input-group">
+          <FontAwesomeIcon icon={faScissors} className="fa-icon" />
+          <label>Crossover %</label>
           <input
             type="number"
             step="0.01"
-            id="crossoverProbability"
+            className="neo-number-input"
             value={crossoverProbability}
-            onChange={handleCrossoverProbabilityChange}
+            onChange={(e) =>
+              setCrossoverProbability(parseFloat(e.target.value) || 0)
+            }
           />
         </div>
 
-        {/* Mutation Probability */}
         <div className="input-group">
-          <img src={mutationIcon} alt="Mutation Probability" className="icon" />
-          <label htmlFor="mutationProbability"> Mutation %</label>
+          <FontAwesomeIcon icon={faDna} className="fa-icon" />
+          <label>Mutation %</label>
           <input
             type="number"
             step="0.01"
-            id="mutationProbability"
+            className="neo-number-input"
             value={mutationProbability}
-            onChange={handleMutationProbabilityChange}
+            onChange={(e) =>
+              setMutationProbability(parseFloat(e.target.value) || 0)
+            }
           />
         </div>
 
-        {/* Display Conflicts */}
-        <div className="info-item">
-          <span className="info-label">Conflicts:</span>
-          <span className="info-value">{conflicts}</span>
-        </div>
-
-        {/* Display Message */}
-        <div className="message-item">
-          <span className="message-text">{message}</span>
-        </div>
-
-        {/* Start and Stop Buttons */}
-        <div className="button-group">
-          <div
-            className="button-item"
-            onClick={() =>
-              onStart({
-                maxGen,
-                targetFitness,
-                popSize,
-                crossoverProbability,
-                mutationProbability,
-              })
-            }
-          >
-            <img src={startIcon} alt="Start" className="icon" />
-            <span className="button-label">Start</span>
+        <div className="feedback-section">
+          <ProgressWatch currentGen={currentGen} maxGen={maxGen} />
+          <div className="info-item">
+            <FontAwesomeIcon
+              icon={faExclamationTriangle}
+              className="fa-icon warning"
+            />
+            <span className="info-label">Conflicts: {conflicts}</span>
           </div>
-          <div className="button-item" onClick={onStop}>
-            <img src={stopIcon} alt="Stop" className="icon" />
-            <span className="button-label">Stop</span>
-          </div>
+          <div className="message-item"></div>
+          {/*<span className="message-text">{message}</span>*/}
         </div>
       </div>
     </div>

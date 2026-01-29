@@ -1,197 +1,95 @@
-:root {
-    /* Monochromatic Neo Palette */
-    --primary-bg: #dcdcdc;       /* Base surface color */
-    --secondary-bg: #e3e3e3;     /* Raised element color */
-    --accent-color: #ffffff;      /* Light source (Top-Left) */
-    --soft-shadow: rgba(0, 0, 0, 0.15); /* Shadow (Bottom-Right) */
-    
-    /* Text & Status */
-    --text-color: #444444;       /* Soft dark grey for readability */
-    --highlight-color: #15F5BA;  /* Keep as a tiny 'active' LED dot only */
-    
-    /* Font Sizes */
-    --font-small: 0.85rem;
-    --font-medium: 1rem;
+/* --- Watch Container --- */
+.watch-container {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0 25px 0;
 }
 
-/* general Styling */
-.controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 440px;
+.watch-face {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  background: var(--surface-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Level +1: Popped Up Body (Matches Sidebar/Buttons) */
+  box-shadow: 
+    8px 8px 16px var(--soft-shadow), 
+    -8px -8px 16px var(--light-highlight);
 }
 
-/* sidebar Container */
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    width: 280px;
-    max-width: 100%;
-    height: 100%;
-    background-color: var(--primary-bg);
-    border-radius: 12px;
-    padding: 20px;
-    box-sizing: border-box;
-    margin: 5px;
-    box-shadow: 0 4px 10px var(--shadow-color);
+.watch-svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+  /* Optional: gives the ring itself a slight "grooved" look */
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5)); 
 }
 
-/* input Groups */
-.input-group {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    width: 100%;
-    gap: 10px;
-    margin-bottom: 8px;
+.watch-track {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.05); /* Very subtle sunken track */
+  stroke-width: 8;
 }
 
-
-.input-group img {
-    width: 22px; 
-    height: 22px;
+.watch-progress {
+  fill: none;
+  stroke: rgba(22, 28, 61, 0.596) ;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Glow matches neomorphic lighting intensity */
+  
 }
 
-
-.input-group label {
-    font-size: var(--font-small);
-    color: var(--text-color);
-    flex-grow: 1;
-    text-align: left;
-    font-weight: 600;
+/* --- Watch Digital Center (Recessed LCD Well) --- */
+.watch-display {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 85px;
+  height: 85px;
+  
+  /* Slightly darker surface color for the "screen" background */
+  background: #2a2a2a; 
+  border-radius: 50%;
+  
+  /* Level -1: Sunken "Well" Look */
+  /* This creates the depth so the screen looks carved into the watch body */
+  box-shadow: 
+    inset 6px 6px 10px rgba(0, 0, 0, 0.4), 
+    inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+  
+  /* Bezel edge: tiny highlight to separate the body from the pit */
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* input Field */
-.input-group input {
-    width: 65px;
-    padding: 6px;
-    border: 2px solid var(--accent-color);
-    border-radius: 8px;
-    background-color: var(--primary-bg);
-    color: var(--text-color);
-    text-align: center;
-    font-size: var(--font-small);
-    transition: border-color 0.3s ease-in-out;
+.watch-percent {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #d4d4d4; 
+  margin-bottom: 4px;
 }
 
-/* input Field Hover/Focus */
-.input-group input:focus {
-    outline: none;
-    border-color: var(--highlight-color);
+.watch-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #9c9c9c; /* Muted hardware label color */
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
-/* button Group */
-.button-group {
-    display: flex;
-    flex-direction: row; 
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin-top: auto;
+/* Success State: When 'finished' class is applied */
+.watch-face.finished .watch-progress {
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
 }
 
-/* button Item */
-.button-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    background-color: var(--secondary-bg);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 2px 5px var(--shadow-color);
-}
-
-/* button Icons */
-.button-item img {
-    width: 24px;
-    height: 24px;
-}
-
-/* button Labels */
-.button-label {
-    font-size: var(--font-small);
-    color: var(--text-color);
-    font-weight: 600;
-}
-
-/* button Hover Effects */
-.button-item:hover {
-    background-color: var(--hover-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px var(--hover-shadow-color);
-}
-
-/* button Active Click Effect */
-.button-item:active {
-    transform: scale(0.97);
-}
-
-/* Info Item */
-.info-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: auto; /* Push it to the bottom */
-    padding: 15px 0; /* Increased padding for better spacing */
-    border-top: 2px solid var(--accent-color); /* Thicker separator line */
-}
-
-.info-label {
-    font-size: 1.1rem; /* Larger font size */
-    color: var(--text-color);
-    font-weight: 900; /* Bold text */
-    letter-spacing: 1px; /* Improved readability */
-}
-
-.info-value {
-    font-size: 1.3rem; /* Larger font size for emphasis */
-    color: var(--highlight-color);
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-    animation: pulse 1.5s infinite alternate; /* Add a glowing effect */
-}
-
-/* Pulse Animation for Highlight */
-@keyframes pulse {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0.8;
-        transform: scale(1.05);
-    }
-}
-
-/* Message Item */
-.message-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-top: 10px; /* Space between conflicts and message */
-    padding: 10px 0;
-}
-
-.message-text {
-    font-size: 1rem; /* Medium font size */
-    color: var(--highlight-color); /* Neon color for emphasis */
-    font-weight: bold;
-    text-align: center;
-    letter-spacing: 1px; /* Improved readability */
-    animation: fadeIn 1s ease-in-out; /* Smooth fade-in effect */
-}
-
-/* Fade-In Animation */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+.watch-face.finished .watch-percent {
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
 }

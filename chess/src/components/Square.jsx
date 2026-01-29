@@ -1,3 +1,5 @@
+import "./Square.css";
+
 import queenImage from "../assets/pieces/q.png";
 import knightImage from "../assets/pieces/k.png";
 import rookImage from "../assets/pieces/r.png";
@@ -18,8 +20,9 @@ const Square = ({ isDark, piece, isConflict }) => {
         <img
           src={pieceImages[piece]}
           alt={piece}
-          className={isConflict ? "piece-in-conflict" : ""}
-          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          className={
+            isConflict ? "chess-piece piece-in-conflict" : "chess-piece"
+          }
         />
       )}
     </div>
