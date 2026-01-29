@@ -2,8 +2,8 @@
 
 :root {
   --bg-color: #C9C9C9; 
-  --light-highlight: #d8d8d8c4; 
-  --soft-shadow: rgba(0, 0, 0, 0.103); 
+  --light-highlight: #ffffffb2; /* Brightened for better contrast */
+  --soft-shadow: rgba(0, 0, 0, 0.2); 
   --board-color: #e3e3e3;
   --main-font: 'Inter', sans-serif;
 }
@@ -31,7 +31,7 @@ html, body {
   background-attachment: fixed;
 }
 
-/* 2. THE MAIN LAYOUT (Flex Column) */
+/* 2. THE MAIN LAYOUT (Level +1: Raised) */
 .main-layout {
   display: flex;
   flex-direction: column; 
@@ -41,51 +41,103 @@ html, body {
   border-radius: 32px; 
   gap: 25px; 
 
+  /* Lighting: Light hits Top-Left, Shadow falls Bottom-Right */
   box-shadow: 
-    -5px -5px 10px var(--light-highlight),
-    5px 5px 10px var(--soft-shadow);
+    8px 8px 16px rgba(0, 0, 0, 0.15), 
+    -8px -8px 16px var(--light-highlight);
   
   position: relative;
   z-index: 2;
 }
 
-/* 3. NAVBAR */
+/* 3. NAVBAR (Level -1: Sunken) */
+/* 3. NAVBAR (Level -1: Sunken Tray) */
 .navbar-container {
   width: 100%;
   height: 60px;
   flex: none;
-  background: rgba(230, 230, 230, 0.5);
+  background: var(--surface-color); 
   border-radius: 16px;
   box-sizing: border-box;
   
+  /* KEEP IT INSET: This creates the "carved out" look */
   box-shadow: 
-    inset -2px -2px 5px var(--light-highlight),
-    inset 2px 2px 5px var(--soft-shadow);
+    inset 4px 4px 8px rgba(0, 0, 0, 0.15), 
+    inset -4px -4px 8px var(--light-highlight);
     
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  justify-content: space-between; /* Logo left, Buttons right */
+  padding: 0 25px;
 }
 
-/* 4. CONTENT AREA (Flex Row) */
+/* 6. BUTTONS IN NAVBAR (Level +1: Raised/Up) */
+.button-group-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.button-group-nav .button-item {
+  /* Control the size of the circle here */
+  width: 35px; 
+  height: 35px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 0; /* Remove padding to keep the icon centered */
+  border-radius: 50%; /* Makes it a circle */
+  cursor: pointer;
+  border: none;
+  background: var(--surface-color);
+  
+  /* Raised lighting effect */
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.15), 
+    -4px -4px 8px var(--light-highlight);
+    
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.button-group-nav .button-item .fa-icon {
+  margin: 0;
+  font-size: 1.1rem;
+  /* Icon "Down" effect to contrast with the "Up" button */
+  filter: drop-shadow(1px 1px 0px var(--light-highlight));
+}
+
+.button-group-nav .button-item:active {
+  /* Circular sunken effect on click */
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.2), 
+    inset -3px -3px 6px var(--light-highlight);
+  transform: scale(0.92);
+}
+
+.button-item.start .fa-icon {
+  color: rgba(22, 28, 61, 0.822) !important
+}
+
+.button-item.stop .fa-icon {
+  color:  rgba(63, 26, 34, 0.795) !important;
+}
+
+/* 4. CONTENT AREA */
 .content-area {
   display: flex;
   flex-direction: row;    
-  align-items: flex-start;
-  gap: 30px;              
+  align-items: stretch;
+  gap: 30px;      
+  height: 440px;        
 }
 
-.controls-container {
-  flex: 1;
-  min-width: 280px;
-  display: flex;
-  flex-direction: column;
-}
 
 /* 5. THE CHESSBOARD COMPONENTS */
 .chessboard-container {
   flex: none;
   width: 440px;
+  height: 440px;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -105,9 +157,11 @@ html, body {
   box-sizing: border-box;
   z-index: 10;
   overflow: visible !important;
+
+  /* Level -1: Large Inset to create the board "pit" */
   box-shadow: 
-    -5px -5px 10px var(--light-highlight),
-    5px 5px 10px var(--soft-shadow);
+    inset 6px 6px 12px rgba(0, 0, 0, 0.15), 
+    inset -4px -4px 10px var(--light-highlight);
 }
 
 .chessboard {
@@ -115,13 +169,10 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 15px; 
+  border-radius: 4px; 
   box-sizing: border-box;
   overflow: visible !important;
   z-index: 1;
-  box-shadow: 
-    inset -8px -8px 20px 0px var(--light-highlight),
-    inset 8px 8px 10px 0px rgba(44, 44, 44, 0.055); 
 }
 
 .chessboard-row {
@@ -132,7 +183,7 @@ html, body {
 }
 
 .square {
-  width: 12.5%; /* Precisely 1/8th of the square width */
+  width: 12.5%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -141,22 +192,23 @@ html, body {
   box-sizing: border-box;
   z-index: 2;
   overflow: visible !important;
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 /* 6. SQUARES & PIECES */
 .square.light {
   background-color: rgba(228, 228, 228, 0.925);
-  box-shadow: -2px -2px -4px 1px var(--light-highlight), 
-  -10px -10px -4px var(--soft-shadow);
+  /* Level 0: Flush with the rim floor, no shadows */
+  box-shadow: none;
   z-index: 5;
 }
 
 .square.dark {
   background-color: rgba(211, 211, 211, 0.925); 
+  /* Level -1: Carved deeper into the surface */
   box-shadow: 
-    inset -2px -2px 6px 2px var(--light-highlight),
-    inset 2px 2px 6px 2px var(--soft-shadow);
+    inset 4px 4px 6px rgba(0, 0, 0, 0.12),
+    inset -2px -2px 4px var(--light-highlight); 
   z-index: 5;
 }
 
@@ -167,53 +219,279 @@ html, body {
   position: relative;
   
   transform: scale(1.1);
-  
   z-index: 2;
-  
-  filter: drop-shadow(2px 4px 6px rgba(26, 26, 26, 0.397));
+
+  filter: drop-shadow(4px 5px 6px rgba(0, 0, 0, 0.35));
   
   -webkit-user-select: none;
   -moz-user-select: none;
-  user-select: none; /*1056 992*/
+  user-select: none; 
   pointer-events: none; 
 }
 
-/*7. FEEDBACK & ANIMATIONS */
+/* 7. FEEDBACK & ANIMATIONS */
+
 .square.conflict-glow {
-  background-color: rgba(18, 18, 54, 0.466) !important;
-  transition: background-color 0.2s ease;
+  background-color: rgba(12, 14, 28, 0.288) !important;
+  transition: all 0.2s ease;
 }
 
 .square.light.conflict-glow {
-  background-color: rgba(15, 23, 44, 0.541) !important;
+  
+  background-color: rgba(22, 21, 31, 0.507) !important;
+  box-shadow: none;
+  z-index: 5;
 }
 
 .square.dark.conflict-glow {
-  background-color: rgba(14, 17, 36, 0.55) !important;
-  box-shadow: 
-    inset -2px -2px 6px rgba(50, 70, 130, 0.3), 
-    inset 2px 2px 6px rgba(27, 27, 27, 0.568) !important;
+  
+  background-color: rgba(8, 10, 20, 0.685) !important;
+   box-shadow: 
+    inset 5px 5px 10px rgba(0, 0, 0, 0.692), 
+    inset -2px -2px 5px rgba(255, 255, 255, 0.05) !important;
 }
 
 .piece-in-conflict {
   transform: scale(1.1); 
-
-  filter: drop-shadow(0 0 12px rgba(41, 41, 41, 0.884)) brightness(0.9);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1)) brightness(1.1);
   animation: piece-vibrate 0.3s infinite linear;
   z-index: 1000;
 }
 
 @keyframes piece-vibrate {
-
-  0% { transform: scale(1.2) translate(0, 0); }
-  25% { transform: scale(1.2) translate(0.8px, -0.8px); }
-  75% { transform: scale(1.2) translate(-0.8px, 0.8px); }
-  100% { transform: scale(1.2) translate(0, 0); }
+  0% { transform: scale(1.1) translate(0, 0); }
+  25% { transform: scale(1.1) translate(0.6px, -0.6px); }
+  75% { transform: scale(1.1) translate(-0.6px, 0.6px); }
+  100% { transform: scale(1.1) translate(0, 0); }
 }
 
-@keyframes piece-vibrate {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(0.6px, -0.6px); }
-  75% { transform: translate(-0.6px, 0.6px); }
-  100% { transform: translate(0, 0); }
+
+
+/*================================================================*/
+/* --- SIDEBAR CONTAINER --- */
+.sidebar {
+  flex: 1; 
+  height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  padding: 30px;
+  background: var(--surface-color); 
+  border-radius: 24px;
+  box-sizing: border-box;
+  
+  /* Popped UP effect */
+  box-shadow: 
+    8px 8px 16px var(--soft-shadow), 
+    -8px -8px 16px var(--light-highlight);
+}
+
+/* --- TOP INPUT SECTION --- */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Standard Input Groups */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.02); 
+  border-radius: 12px;
+  
+  /* Engraved/Sunken Groove */
+  box-shadow: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
+    inset -2px -2px 5px var(--light-highlight);
+}
+
+/* --- NEW RANGE SLIDER SECTION --- */
+.input-group-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 15px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  /* Sunken Groove */
+  box-shadow: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
+    inset -2px -2px 5px var(--light-highlight);
+}
+
+.slider-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.slider-value {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #444;
+  /* Small raised button for the number */
+  background: var(--surface-color);
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.1), -2px -2px 4px #ffffff;
+}
+
+/* The Slider Bar */
+.neomorphic-slider {
+
+  width: 100%;
+  height: 6px;
+  background: #d1d1d1;
+  border-radius: 10px;
+  outline: none;
+  /* Sunken Track */
+  box-shadow: 
+    inset 2px 2px 4px rgba(0, 0, 0, 0.2), 
+    inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Slider Knob (Chrome/Safari) */
+.neomorphic-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--surface-color);
+  border-radius: 50%;
+  opacity: 1 !;
+  cursor: pointer;
+  border: none;
+  /* Raised Knob */
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15), -3px -3px 6px #ffffff;
+  transition: transform 0.1s ease;
+}
+
+.neomorphic-slider::-webkit-slider-thumb:active {
+  transform: scale(0.9);
+}
+
+/* Slider Knob (Chrome/Safari/Edge) */
+.neomorphic-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  
+  /* --- CONTROL SIZE HERE --- */
+  width: 24px;  /* Increase or decrease this */
+  height: 24px; /* Keep width and height equal for a perfect circle */
+  /* ------------------------- */
+
+  background: var(--surface-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+
+  /* Adjust shadow based on size: larger circles need softer, larger shadows */
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15), -4px -4px 8px #ffffff;
+  
+  transition: transform 0.1s ease;
+}
+
+/* Slider Knob (Firefox) */
+.neomorphic-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  
+  /* --- FULL OPACITY FIX --- */
+  background: #e0e0e0;
+  opacity: 1 !important;
+  /* ----------------------- */
+
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2), -4px -4px 8px #ffffff;
+}
+/* --- COMMON ELEMENTS --- */
+.input-group label, .slider-header label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+  text-shadow: 1px 1px 0px var(--light-highlight);
+}
+
+.fa-icon {
+  font-size: 1.1rem;
+  color: #777;
+  filter: drop-shadow(1px 1px 0px #ffffff);
+  opacity: 0.8;
+}
+
+input[type="number"] {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  color: #333;
+  outline: none;
+  width: 60px;
+  font-family: inherit;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* --- FEEDBACK AREA --- */
+.feedback-section {
+  
+  display: flex;
+  
+  flex-direction: row;
+  gap: 15px;
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.01);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #555;
+}
+
+.message-text {
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+  display: block;
+  margin-top: 5px;
+}
+
+/* --- BUTTONS --- */
+.button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.button-item {
+  flex: 1;
+  height: 48px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 14px;
+  cursor: pointer;
+  border: none;
+  background: var(--surface-color);
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  /* Raised Buttons */
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1), -6px -6px 12px #ffffff;
+  transition: all 0.15s ease;
+}
+
+.button-item:active {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15), inset -2px -2px 5px #ffffff;
+  transform: scale(0.97);
 }

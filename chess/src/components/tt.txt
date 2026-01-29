@@ -1,0 +1,144 @@
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLayerGroup,
+  faBullseye,
+  faUsers,
+  faScissors,
+  faDna,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
+import "./Controls.css";
+import "./Controls.css";
+
+const Controls = ({ conflicts, message }) => {
+  const [maxGen, setMaxGen] = useState(50);
+  const [targetFitness, setTargetFitness] = useState(0);
+  const [popSize, setPopSize] = useState(50);
+  const [crossoverProbability, setCrossoverProbability] = useState(0.8);
+  const [mutationProbability, setMutationProbability] = useState(0.01);
+
+  const handleMaxGenChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setMaxGen(isNaN(value) ? 10 : value);
+  };
+
+  const handleTargetFitnessChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setTargetFitness(isNaN(value) ? 0 : value);
+  };
+
+  const handlePopulationChange = (e) => {
+    let value = parseInt(e.target.value, 10);
+    if (isNaN(value)) value = 10;
+    if (value % 2 !== 0) value += 1;
+    setPopSize(value);
+  };
+
+  const handleCrossoverProbabilityChange = (e) => {
+    const value = parseFloat(e.target.value);
+    setCrossoverProbability(
+      isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value,
+    );
+  };
+
+  const handleMutationProbabilityChange = (e) => {
+    const value = parseFloat(e.target.value);
+    setMutationProbability(
+      isNaN(value) || value < 0 ? 0 : value > 1 ? 1 : value,
+    );
+  };
+
+  return (
+    <div className="controls">
+      <div className="navbar"></div>
+      <div className="sidebar">
+        {/* Max Generations */}
+        <div className="input-group">
+          <FontAwesomeIcon icon={faLayerGroup} className="fa-icon" />
+          <label htmlFor="maxGen"> Max Gens</label>
+          <input
+            type="number"
+            id="maxGen"
+            min="0"
+            value={maxGen}
+            onChange={handleMaxGenChange}
+          />
+        </div>
+
+        {/* Population Size */}
+        <div className="input-group">
+          <FontAwesomeIcon icon={faUsers} className="fa-icon" />
+          <label htmlFor="popSize"> Pop. Size</label>
+          <input
+            type="number"
+            id="popSize"
+            value={popSize}
+            onChange={handlePopulationChange}
+          />
+        </div>
+
+        <div className="input-group-slider">
+          <div className="slider-header">
+            <FontAwesomeIcon icon={faBullseye} className="fa-icon" />
+            <label htmlFor="targetFitness">Target Fitness</label>
+            <span className="slider-value">{targetFitness}</span>
+          </div>
+          <input
+            type="range"
+            id="targetFitness"
+            min="0"
+            max="16"
+            step="1"
+            className="neomorphic-slider"
+            value={targetFitness}
+            onChange={handleTargetFitnessChange}
+          />
+        </div>
+
+        {/* Crossover Probability */}
+        <div className="input-group">
+          <FontAwesomeIcon icon={faScissors} className="fa-icon" />
+          <label htmlFor="crossoverProbability"> Crossover %</label>
+          <input
+            type="number"
+            step="0.01"
+            id="crossoverProbability"
+            value={crossoverProbability}
+            onChange={handleCrossoverProbabilityChange}
+          />
+        </div>
+
+        {/* Mutation Probability */}
+        <div className="input-group">
+          <FontAwesomeIcon icon={faDna} className="fa-icon" />
+          <label htmlFor="mutationProbability"> Mutation %</label>
+          <input
+            type="number"
+            step="0.01"
+            id="mutationProbability"
+            value={mutationProbability}
+            onChange={handleMutationProbabilityChange}
+          />
+        </div>
+
+        {/* Display Conflicts */}
+        <div className="info-item">
+          <FontAwesomeIcon
+            icon={faExclamationTriangle}
+            className="fa-icon warning"
+          />
+          <span className="info-label">Conflicts:</span>
+          <span className="info-value">{conflicts}</span>
+        </div>
+
+        {/* Display Message */}
+        <div className="message-item">
+          <span className="message-text">{message}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Controls;
