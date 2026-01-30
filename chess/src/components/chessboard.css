@@ -1,0 +1,105 @@
+.chessboard {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  box-sizing: border-box;
+  overflow: visible !important;
+  z-index: 1;
+}
+
+.chessboard-row {
+  display: flex;
+  width: 100%;
+  height: 12.5%;
+  overflow: visible;
+}
+
+.square {
+  width: 12.5%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  z-index: 2;
+  overflow: visible !important;
+  border-radius: 2px;
+}
+
+/* 6. SQUARES & PIECES */
+.square.light {
+  background-color: rgba(228, 228, 228, 0.925);
+  /* Level 0: Flush with the rim floor, no shadows */
+  box-shadow: none;
+  z-index: 5;
+}
+
+.square.dark {
+  background-color: rgba(211, 211, 211, 0.925);
+  /* Level -1: Carved deeper into the surface */
+  box-shadow:
+    inset 4px 4px 6px rgba(0, 0, 0, 0.12),
+    inset -2px -2px 4px var(--light-highlight);
+  z-index: 5;
+}
+
+.chess-piece {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+
+  transform: scale(1.1);
+  z-index: 2;
+
+  filter: drop-shadow(4px 5px 6px rgba(0, 0, 0, 0.35));
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+
+
+/* 7. FEEDBACK & ANIMATIONS */
+.square.conflict-glow {
+  background-color: rgba(12, 14, 28, 0.288) !important;
+  transition: all 0.2s ease;
+}
+
+.square.light.conflict-glow {
+
+  background-color: rgba(22, 21, 31, 0.507) !important;
+  box-shadow: none;
+  z-index: 5;
+}
+
+.square.dark.conflict-glow {
+
+  background-color: rgba(8, 10, 20, 0.685) !important;
+  box-shadow:
+    inset 5px 5px 10px rgba(0, 0, 0, 0.692),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.05) !important;
+}
+
+.piece-in-conflict {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1)) brightness(1.1);
+  animation: piece-vibrate 0.3s infinite linear;
+  z-index: 1000;
+}
+
+@keyframes piece-vibrate {
+  0% {transform: scale(1.1) translate(0, 0);}
+
+  25% {transform: scale(1.1) translate(0.6px, -0.6px);}
+
+  75% {transform: scale(1.1) translate(-0.6px, 0.6px);}
+
+  100% {
+transform: scale(1.1) translate(0, 0);}
+}
