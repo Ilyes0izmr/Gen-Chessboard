@@ -1,95 +1,258 @@
-/* --- Watch Container --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg-color: #C9C9C9;
+  --surface-color: #D6D6D6;
+  --light-highlight: #ffffff;
+  --soft-shadow: rgba(0, 0, 0, 0.2);
+  --lcd-bg: #2a2a2a;
+}
+
+/* --- SIDEBAR CONTAINER --- */
+.sidebar {
+  font-family: 'Inter', sans-serif;
+  flex: 1;
+  width: 330px;
+  height: 440px; /* Locked height to match chessboard */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px; /* Tightened for 440px limit */
+  padding: 20px;
+  background: var(--surface-color);
+  border-radius: 24px;
+  box-sizing: border-box;
+  box-shadow: 8px 8px 16px var(--soft-shadow), -8px -8px 16px var(--light-highlight);
+}
+
+/* --- COMPACT INPUT GROUPS (Sunken Groove) --- */
+.input-group, .input-group-slider {
+  display: flex;
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  box-shadow: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
+    inset -2px -2px 5px var(--light-highlight);
+}
+
+.input-group {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-group-slider {
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* --- UNIFIED BADGE STYLE (Inputs & Slider) --- */
+.neo-input-badge, .slider-value {
+  height: 24px; /* Reduced height for better fit */
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-color);
+  border-radius: 6px;
+  border: none;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px #ffffff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #444;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.slider-value {
+  margin-left: auto;
+  width: 45px;
+}
+
+/* Badge Interaction */
+.neo-input-badge:focus {
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px #ffffff;
+  color: #222;
+}
+
+/* --- LABELS --- */
+.input-group label, .slider-header label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  text-shadow: 1px 1px 0px var(--light-highlight);
+  text-transform: uppercase;
+}
+
+.label-col, .slider-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fa-icon {
+  font-size: 1rem;
+  color: #777;
+  filter: drop-shadow(1px 1px 0px #ffffff);
+  opacity: 0.8;
+}
+
+/* --- BROWSER ARROW CLEANUP --- */
+.neo-input-badge::-webkit-outer-spin-button,
+.neo-input-badge::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.neo-input-badge[type=number] {
+ 
+  -moz-appearance: textfield;
+   appearance: textfield;
+}
+
+/* --- RANGE SLIDER --- */
+.neomorphic-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #d1d1d1;
+  border-radius: 10px;
+  outline: none;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2), inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.neomorphic-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--surface-color);
+  border-radius: 50%;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15), -3px -3px 6px #ffffff;
+  cursor: pointer;
+}
+
+/* --- COMPACT PROGRESS WATCH --- */
 .watch-container {
   display: flex;
   justify-content: center;
-  margin: 15px 0 25px 0;
 }
 
 .watch-face {
   position: relative;
-  width: 130px;
-  height: 130px;
+  width: 100px; /* Reduced for 440px constraint */
+  height: 100px;
   background: var(--surface-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* Level +1: Popped Up Body (Matches Sidebar/Buttons) */
-  box-shadow: 
-    8px 8px 16px var(--soft-shadow), 
-    -8px -8px 16px var(--light-highlight);
+  box-shadow: 6px 6px 12px var(--soft-shadow), -6px -6px 12px var(--light-highlight);
 }
 
-.watch-svg {
-  transform: rotate(-90deg);
-  width: 100%;
-  height: 100%;
-  /* Optional: gives the ring itself a slight "grooved" look */
-  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5)); 
-}
-
-.watch-track {
-  fill: none;
-  stroke: rgba(0, 0, 0, 0.05); /* Very subtle sunken track */
-  stroke-width: 8;
-}
-
+.watch-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+.watch-track { fill: none; stroke: rgba(0, 0, 0, 0.05); stroke-width: 8; }
 .watch-progress {
   fill: none;
-  stroke: rgba(22, 28, 61, 0.596) ;
+  stroke: rgba(22, 28, 61, 0.6);
   stroke-width: 8;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Glow matches neomorphic lighting intensity */
-  
+  transition: stroke-dashoffset 0.4s ease;
 }
 
-/* --- Watch Digital Center (Recessed LCD Well) --- */
 .watch-display {
   position: absolute;
+  width: 65px;
+  height: 65px;
+  background: var(--lcd-bg);
+  border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 85px;
-  height: 85px;
-  
-  /* Slightly darker surface color for the "screen" background */
-  background: #2a2a2a; 
-  border-radius: 50%;
-  
-  /* Level -1: Sunken "Well" Look */
-  /* This creates the depth so the screen looks carved into the watch body */
-  box-shadow: 
-    inset 6px 6px 10px rgba(0, 0, 0, 0.4), 
-    inset -4px -4px 8px rgba(255, 255, 255, 0.05);
-  
-  /* Bezel edge: tiny highlight to separate the body from the pit */
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.4), inset -2px -2px 6px rgba(255, 255, 255, 0.05);
 }
 
 .watch-percent {
   font-family: 'Courier New', monospace;
   font-weight: bold;
-  font-size: 1.3rem;
-  color: #d4d4d4; 
-  margin-bottom: 4px;
+  font-size: 1rem;
+  color: #d4d4d4;
 }
 
 .watch-label {
-  font-size: 0.55rem;
+  font-size: 0.5rem;
   font-weight: 700;
-  color: #9c9c9c; /* Muted hardware label color */
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  color: #888;
+  letter-spacing: 1px;
 }
 
-/* Success State: When 'finished' class is applied */
-.watch-face.finished .watch-progress {
-  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+/* --- FEEDBACK SECTION --- */
+.feedback-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.02); /* Slight tint to help the white flash pop */
+  border-radius: 12px;
+  
+  /* THE FIX: Natural Sunken Lighting */
+  /* Top-Left: Dark Inset Shadow */
+  /* Bottom-Right: White "Flash" Inset Highlight */
+  box-shadow: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
+    inset -2px -2px 5px var(--light-highlight);
 }
 
-.watch-face.finished .watch-percent {
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.8rem;
+  /* Adds that engraved feel to the text itself */
+  text-shadow: 1px 1px 0px var(--light-highlight);
 }
+
+.info-item { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #555; font-size: 0.8rem; }
+.warning { color: #8a2a2a; opacity: 0.9; }
+
+/* --- FIREFOX SPECIFIC DOT RESTORATION --- */
+.neomorphic-slider::-moz-range-thumb {
+  /* Reset Firefox defaults */
+  width: 18px;
+  height: 18px;
+  background: var(--surface-color);
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  
+  /* Restore the High-Depth Shadows for Firefox */
+  box-shadow: 
+    3px 3px 6px rgba(0, 0, 0, 0.15), 
+    -2px -2px 6px #ffffff,
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8);
+    
+  transition: transform 0.1s ease;
+}
+
+/* Firefox Track Fix (Ensures the dot doesn't get clipped) */
+.neomorphic-slider::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  background: #d1d1d1;
+  border-radius: 10px;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2), inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Fix for Firefox's blue focus ring around the dot */
+.neomorphic-slider:-moz-focusring {
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+
