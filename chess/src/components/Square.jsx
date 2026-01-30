@@ -1,5 +1,3 @@
-import "./Square.css";
-
 import queenImage from "../assets/pieces/q.png";
 import knightImage from "../assets/pieces/k.png";
 import rookImage from "../assets/pieces/r.png";

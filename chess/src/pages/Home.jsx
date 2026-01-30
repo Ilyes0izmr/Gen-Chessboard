@@ -1,18 +1,17 @@
 import React, { useState, useRef } from "react";
 import Chessboard from "../components/Chessboard";
 import Controls from "../components/Controls";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "../components/Navbar";
 import "./Home.css";
 
 const Home = () => {
   const [board, setBoard] = useState(null);
   const [conflicts, setConflicts] = useState(0);
   const [conflictSquares, setConflictSquares] = useState([]);
-  const [message, setMessage] = useState("press start...");
+  const [message, setMessage] = useState("press start please ...");
   const [currentGen, setCurrentGen] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
 
-  // This ref will hold the current settings from the Controls component
   const controlsDataRef = useRef({
     maxGen: 50,
     targetFitness: 0,
@@ -24,6 +23,7 @@ const Home = () => {
   const workerRef = useRef(null);
 
   const handleStart = () => {
+    setIsRunning(true);
     if (workerRef.current) workerRef.current.terminate();
 
     workerRef.current = new Worker(
@@ -49,6 +49,7 @@ const Home = () => {
         setMessage(workerMsg);
       } else if (type === "FINISHED") {
         workerRef.current = null;
+        setIsRunning(false);
       }
     };
 
@@ -63,24 +64,20 @@ const Home = () => {
     setConflicts(0);
     setConflictSquares([]);
     setCurrentGen(0);
+    setIsRunning(false);
     setMessage("press start...");
   };
 
   return (
     <div className="home-container">
       <div className="main-layout">
-        {/* Top: Navbar with Buttons */}
-        <div className="navbar-container">
-          <div className="navbar-logo"></div>
-          <div className="button-group-nav">
-            <button className="button-item start" onClick={handleStart}>
-              <FontAwesomeIcon icon={faPlay} className="fa-icon" />
-            </button>
-            <button className="button-item stop" onClick={handleReset}>
-              <FontAwesomeIcon icon={faStop} className="fa-icon" />
-            </button>
-          </div>
-        </div>
+        {/* Render the new Navbar component */}
+        <Navbar
+          onStart={handleStart}
+          onReset={handleReset}
+          statusMessage={message}
+          isRunning={isRunning}
+        />
 
         <div className="content-area">
           <div className="chessboard-container">
@@ -91,7 +88,6 @@ const Home = () => {
 
           <div className="controls-container">
             <Controls
-              // We pass a function to update the ref whenever an input changes
               onSettingsChange={(newData) => {
                 controlsDataRef.current = newData;
               }}

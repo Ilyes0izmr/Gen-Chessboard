@@ -3,21 +3,19 @@
 :root {
   --bg-color: #C9C9C9;
   --surface-color: #D6D6D6;
-  --light-highlight: #ffffff;
+  --light-highlight: #ffffffb2;
   --soft-shadow: rgba(0, 0, 0, 0.2);
   --lcd-bg: #2a2a2a;
+  --inner-groove: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px #ffffff;
 }
 
-/* --- SIDEBAR CONTAINER --- */
 .sidebar {
   font-family: 'Inter', sans-serif;
-  flex: 1;
   width: 330px;
-  height: 440px; /* Locked height to match chessboard */
+  height: 440px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 10px; /* Tightened for 440px limit */
+  gap: 10px;
   padding: 20px;
   background: var(--surface-color);
   border-radius: 24px;
@@ -25,15 +23,13 @@
   box-shadow: 8px 8px 16px var(--soft-shadow), -8px -8px 16px var(--light-highlight);
 }
 
-/* --- COMPACT INPUT GROUPS (Sunken Groove) --- */
-.input-group, .input-group-slider {
+/* --- REUSABLE INPUT GROUPS --- */
+.input-group, .input-group-slider, .feedback-section {
   display: flex;
   padding: 8px 14px;
   background: rgba(0, 0, 0, 0.02);
   border-radius: 12px;
-  box-shadow: 
-    inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
-    inset -2px -2px 5px var(--light-highlight);
+  box-shadow: var(--inner-groove);
 }
 
 .input-group {
@@ -46,9 +42,9 @@
   gap: 6px;
 }
 
-/* --- UNIFIED BADGE STYLE (Inputs & Slider) --- */
+/* --- BADGES & INPUTS --- */
 .neo-input-badge, .slider-value {
-  height: 24px; /* Reduced height for better fit */
+  height: 24px;
   width: 65px;
   display: flex;
   align-items: center;
@@ -57,9 +53,9 @@
   border-radius: 6px;
   border: none;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px #ffffff;
-  font-family: inherit;
+  font: inherit; 
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #444;
   text-align: center;
   outline: none;
@@ -71,13 +67,12 @@
   width: 45px;
 }
 
-/* Badge Interaction */
 .neo-input-badge:focus {
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px #ffffff;
   color: #222;
 }
 
-/* --- LABELS --- */
+/* --- TYPOGRAPHY --- */
 .input-group label, .slider-header label {
   font-size: 0.85rem;
   font-weight: 600;
@@ -99,17 +94,15 @@
   opacity: 0.8;
 }
 
-/* --- BROWSER ARROW CLEANUP --- */
+/* Remove number arrows */
 .neo-input-badge::-webkit-outer-spin-button,
 .neo-input-badge::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-.neo-input-badge[type=number] {
- 
-  -moz-appearance: textfield;
-   appearance: textfield;
+.neo-input-badge[type=number] { 
+  -moz-appearance:textfield; 
+   appearance: textfield; 
 }
 
 /* --- RANGE SLIDER --- */
@@ -117,7 +110,7 @@
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 6px;
+  height: 7px;
   background: #d1d1d1;
   border-radius: 10px;
   outline: none;
@@ -126,23 +119,20 @@
 
 .neomorphic-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   background: var(--surface-color);
   border-radius: 50%;
-  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15), -3px -3px 6px #ffffff;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.356), -3px -3px 6px #ffffff;
   cursor: pointer;
 }
 
-/* --- COMPACT PROGRESS WATCH --- */
-.watch-container {
-  display: flex;
-  justify-content: center;
-}
+/* --- PROGRESS WATCH --- */
+.watch-container { display: flex; justify-content: center; }
 
 .watch-face {
   position: relative;
-  width: 100px; /* Reduced for 440px constraint */
+  width: 100px;
   height: 100px;
   background: var(--surface-color);
   border-radius: 50%;
@@ -191,20 +181,9 @@
 
 /* --- FEEDBACK SECTION --- */
 .feedback-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-top: auto;
-  padding: 10px 15px;
-  background: rgba(0, 0, 0, 0.02); /* Slight tint to help the white flash pop */
-  border-radius: 12px;
-  
-  /* THE FIX: Natural Sunken Lighting */
-  /* Top-Left: Dark Inset Shadow */
-  /* Bottom-Right: White "Flash" Inset Highlight */
-  box-shadow: 
-    inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
-    inset -2px -2px 5px var(--light-highlight);
+  justify-content: space-between;
+  align-items: center;
 }
 
 .info-item {
@@ -214,45 +193,25 @@
   font-weight: 600;
   color: #555;
   font-size: 0.8rem;
-  /* Adds that engraved feel to the text itself */
   text-shadow: 1px 1px 0px var(--light-highlight);
 }
 
-.info-item { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #555; font-size: 0.8rem; }
 .warning { color: #8a2a2a; opacity: 0.9; }
 
-/* --- FIREFOX SPECIFIC DOT RESTORATION --- */
+/* --- FIREFOX FIXES --- */
 .neomorphic-slider::-moz-range-thumb {
-  /* Reset Firefox defaults */
   width: 18px;
   height: 18px;
   background: var(--surface-color);
   border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.05);
+  border: none;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px #ffffff;
   cursor: pointer;
-  
-  /* Restore the High-Depth Shadows for Firefox */
-  box-shadow: 
-    3px 3px 6px rgba(0, 0, 0, 0.15), 
-    -2px -2px 6px #ffffff,
-    inset 1px 1px 2px rgba(255, 255, 255, 0.8);
-    
-  transition: transform 0.1s ease;
 }
 
-/* Firefox Track Fix (Ensures the dot doesn't get clipped) */
 .neomorphic-slider::-moz-range-track {
-  width: 100%;
   height: 6px;
   background: #d1d1d1;
   border-radius: 10px;
-  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2), inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
-
-/* Fix for Firefox's blue focus ring around the dot */
-.neomorphic-slider:-moz-focusring {
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-}
-
-

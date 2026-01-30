@@ -100,7 +100,6 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
             type="number"
             className="neo-input-badge"
             min="50"
-            step="50"
             value={popSize}
             onChange={(e) => setPopSize(parseInt(e.target.value) || 0)}
           />
@@ -119,7 +118,7 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
             type="range"
             id="targetFitness"
             min="0"
-            max="16"
+            max="10"
             step="1"
             className="neomorphic-slider"
             value={targetFitness}
