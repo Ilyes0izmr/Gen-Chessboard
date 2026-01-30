@@ -76,15 +76,15 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
   return (
     <div className="controls">
       <div className="sidebar">
-        {/* Place it right at the top for maximum visibility */}
-
         {/* Max Generations */}
         <div className="input-group">
-          <FontAwesomeIcon icon={faLayerGroup} className="fa-icon" />
-          <label>Max Generation</label>
+          <div className="label-col">
+            <FontAwesomeIcon icon={faLayerGroup} className="fa-icon" />
+            <label>Max Generation</label>
+          </div>
           <input
             type="number"
-            className="neo-number-input"
+            className="neo-input-badge"
             value={maxGen}
             onChange={(e) => setMaxGen(parseInt(e.target.value) || 0)}
           />
@@ -92,11 +92,13 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
 
         {/* Population Size */}
         <div className="input-group">
-          <FontAwesomeIcon icon={faUsers} className="fa-icon" />
-          <label>Population Size </label>
+          <div className="label-col">
+            <FontAwesomeIcon icon={faUsers} className="fa-icon" />
+            <label>Population Size</label>
+          </div>
           <input
             type="number"
-            className="neo-number-input"
+            className="neo-input-badge"
             min="50"
             step="50"
             value={popSize}
@@ -107,8 +109,10 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
         {/* Target Fitness Slider */}
         <div className="input-group-slider">
           <div className="slider-header">
-            <FontAwesomeIcon icon={faBullseye} className="fa-icon" />
-            <label htmlFor="targetFitness">Target Fitness</label>
+            <div className="label-col">
+              <FontAwesomeIcon icon={faBullseye} className="fa-icon" />
+              <label>Target Fitness</label>
+            </div>
             <span className="slider-value">{targetFitness}</span>
           </div>
           <input
@@ -123,14 +127,16 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
           />
         </div>
 
-        {/* Probabilities */}
+        {/* Crossover Rate */}
         <div className="input-group">
-          <FontAwesomeIcon icon={faScissors} className="fa-icon" />
-          <label>Crossover %</label>
+          <div className="label-col">
+            <FontAwesomeIcon icon={faScissors} className="fa-icon" />
+            <label>Crossover %</label>
+          </div>
           <input
             type="number"
             step="0.01"
-            className="neo-number-input"
+            className="neo-input-badge"
             value={crossoverProbability}
             onChange={(e) =>
               setCrossoverProbability(parseFloat(e.target.value) || 0)
@@ -138,13 +144,16 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
           />
         </div>
 
+        {/* Mutation Rate */}
         <div className="input-group">
-          <FontAwesomeIcon icon={faDna} className="fa-icon" />
-          <label>Mutation %</label>
+          <div className="label-col">
+            <FontAwesomeIcon icon={faDna} className="fa-icon" />
+            <label>Mutation %</label>
+          </div>
           <input
             type="number"
             step="0.01"
-            className="neo-number-input"
+            className="neo-input-badge"
             value={mutationProbability}
             onChange={(e) =>
               setMutationProbability(parseFloat(e.target.value) || 0)
@@ -153,7 +162,12 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
         </div>
 
         <div className="feedback-section">
-          <ProgressWatch currentGen={currentGen} maxGen={maxGen} />
+          <ProgressWatch
+            currentGen={currentGen}
+            maxGen={maxGen}
+            conflicts={conflicts}
+            targetFitness={targetFitness}
+          />
           <div className="info-item">
             <FontAwesomeIcon
               icon={faExclamationTriangle}
@@ -161,8 +175,6 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
             />
             <span className="info-label">Conflicts: {conflicts}</span>
           </div>
-          <div className="message-item"></div>
-          {/*<span className="message-text">{message}</span>*/}
         </div>
       </div>
     </div>
