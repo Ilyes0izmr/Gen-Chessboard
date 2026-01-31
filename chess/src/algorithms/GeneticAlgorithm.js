@@ -32,11 +32,11 @@ export async function runGeneticAlgorithm({
         if (conflictCache.has(key)) {
           individual.conflictData = conflictCache.get(key);
         } else {
-          // Now returns { totalConflicts: X, conflictSquares: [[r,c],...] }
+          //eturns { totalConflicts: X, conflictSquares: [[r,c],...] }
           individual.conflictData = calculateConflictsWithData(individual.matrix);
           conflictCache.set(key, individual.conflictData);
         }
-        // Map totalConflicts back to .conflicts for easier access
+        //totalConflicts back to .conflicts for easier access
         individual.conflicts = individual.conflictData.totalConflicts;
       }
       
@@ -58,14 +58,13 @@ export async function runGeneticAlgorithm({
     }
 
     // 2. Throttled UI Updates + Conflict Path Data
-    // We pass the 5th argument: conflictSquares
     if (onGenerationComplete && (generation % 10 === 0 || currentBest.conflicts <= targetConflicts)) {
       await onGenerationComplete(
         generation, 
         bestIndividual.matrix, 
         bestIndividual.conflicts, 
         bestIndividual.vector,
-        bestIndividual.conflictData.conflictSquares // Pass the squares to highlight
+        bestIndividual.conflictData.conflictSquares 
       );
     }
 
