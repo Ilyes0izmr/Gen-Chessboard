@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -18,23 +18,51 @@ import "./Navbar.css";
 
 const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const startX = useRef(0);
 
-  // Toggle function for the info button
-  const toggleInfo = () => {
-    setIsInfoOpen(!isInfoOpen);
+  const toggleInfo = () => setIsInfoOpen(!isInfoOpen);
+
+  const handleClose = () => {
+    setIsInfoOpen(false);
+    setRotation(0);
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    startX.current = e.pageX - rotation;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const newRotation = e.pageX - startX.current;
+    setRotation(newRotation);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    const snapped = Math.round(rotation / 180) * 180;
+    setRotation(snapped);
   };
 
   const handleCapture = () => {
-    const boardElement = document.querySelector(".chessboard-rim-outlier");
+    const boardElement = document.querySelector(".main-layout");
+
     if (boardElement) {
-      html2canvas(boardElement, { backgroundColor: "#C9C9C9" }).then(
-        (canvas) => {
-          const link = document.createElement("a");
-          link.download = "chessboard-capture.png";
-          link.href = canvas.toDataURL();
-          link.click();
-        },
-      );
+      html2canvas(boardElement, {
+        backgroundColor: "#D6CFC7",
+        scale: 3,
+        useCORS: true,
+        logging: false,
+        allowTaint: true,
+        imageTimeout: 0,
+      }).then((canvas) => {
+        const link = document.createElement("a");
+        link.download = `Gen-Solver-Capture-${new Date().getTime()}.png`;
+        link.href = canvas.toDataURL("image/png", 1.0);
+        link.click();
+      });
     }
   };
 
@@ -50,7 +78,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
         <div className="navbar-section center">
           <div className="social-links-tray">
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/ilyes-izemmouren-901798337/"
               target="_blank"
               rel="noreferrer"
               className="social-link"
@@ -58,7 +86,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
               <FontAwesomeIcon icon={faLinkedin} className="fa-icon-engraved" />
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/Ilyes0izmr"
               target="_blank"
               rel="noreferrer"
               className="social-link"
@@ -66,7 +94,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
               <FontAwesomeIcon icon={faGithub} className="fa-icon-engraved" />
             </a>
             <a
-              href="https://yourportfolio.com"
+              href="https://github.com/Ilyes0izmr"
               target="_blank"
               rel="noreferrer"
               className="social-link"
@@ -78,9 +106,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
 
         <div className="navbar-section right">
           <div className={`status-led ${isRunning ? "active" : "idle"}`}></div>
-
           <div className="button-group-nav">
-            {/* Toggle logic applied here */}
             <button
               className={`button-item info ${isInfoOpen ? "active-toggle" : ""}`}
               onClick={toggleInfo}
@@ -95,9 +121,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
             >
               <FontAwesomeIcon icon={faDownload} className="fa-icon" />
             </button>
-
             <div className="nav-divider"></div>
-
             <button className="button-item start" onClick={onStart}>
               <FontAwesomeIcon icon={faPlay} className="fa-icon" />
             </button>
@@ -108,59 +132,89 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
         </div>
       </div>
 
-      {/* Modal remains the same, but the Info button can now close it */}
       {isInfoOpen && (
-        <div className="modal-overlay" onClick={() => setIsInfoOpen(false)}>
+        <div
+          className="modal-overlay"
+          onClick={handleClose}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        >
           <div
-            className="neomorphic-modal"
+            className="draggable-card-space"
             onClick={(e) => e.stopPropagation()}
+            onMouseDown={handleMouseDown}
           >
-            <button
-              className="modal-close-btn"
-              onClick={() => setIsInfoOpen(false)}
+            <div
+              className="info-card-inner"
+              style={{
+                transform: `rotateY(${rotation}deg)`,
+                transition: isDragging
+                  ? "none"
+                  : "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
             >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-
-            <h2 className="modal-title">Genetic Algorithm Logic</h2>
-            <p className="modal-subtitle">
-              Evolving a solution for the N-Queens puzzle.
-            </p>
-
-            <div className="ga-steps-container">
-              <div className="ga-step-card">
-                <FontAwesomeIcon icon={faUsers} className="ga-step-icon" />
-                <p>
-                  <strong>Population:</strong> Randomly generates board states
-                  (chromosomes).
-                </p>
+              {/* FRONT SIDE: PHASE I */}
+              <div className="info-card-front">
+                <h2 className="modal-title">AI Evolution: Phase I</h2>
+                <div className="ga-steps-container">
+                  <div className="ga-step-card">
+                    <FontAwesomeIcon icon={faUsers} className="ga-step-icon" />
+                    <p>
+                      <strong>Population:</strong> Generates random boards to
+                      explore millions of possibilities.
+                    </p>
+                  </div>
+                  <div className="ga-step-card">
+                    <FontAwesomeIcon
+                      icon={faBullseye}
+                      className="ga-step-icon"
+                    />
+                    <p>
+                      <strong>Fitness & Elitism:</strong> Ranks boards by
+                      conflicts; the top Alphas always survive.
+                    </p>
+                  </div>
+                  <div className="ga-step-card">
+                    <FontAwesomeIcon
+                      icon={faArrowsRotate}
+                      className="ga-step-icon"
+                    />
+                    <p>
+                      <strong>Crossover:</strong> Combines parent DNA to produce
+                      superior offspring.
+                    </p>
+                  </div>
+                </div>
+                <div className="drag-hint">Grab edge to see Phase II →</div>
               </div>
 
-              <div className="ga-step-card">
-                <FontAwesomeIcon icon={faBullseye} className="ga-step-icon" />
-                <p>
-                  <strong>Selection:</strong> Picks the "fittest" boards with
-                  the fewest queen conflicts.
-                </p>
-              </div>
-
-              <div className="ga-step-card">
-                <FontAwesomeIcon
-                  icon={faArrowsRotate}
-                  className="ga-step-icon"
-                />
-                <p>
-                  <strong>Crossover:</strong> Swaps DNA between parents to
-                  create better offspring.
-                </p>
-              </div>
-
-              <div className="ga-step-card">
-                <FontAwesomeIcon icon={faDna} className="ga-step-icon" />
-                <p>
-                  <strong>Mutation:</strong> Randomly shifts queens to prevent
-                  the AI from getting stuck.
-                </p>
+              {/* BACK SIDE: PHASE II */}
+              <div className="info-card-back">
+                <h2 className="modal-title">AI Evolution: Phase II</h2>
+                <div className="ga-steps-container">
+                  <div className="ga-step-card">
+                    <FontAwesomeIcon icon={faUsers} className="ga-step-icon" />
+                    <p>
+                      <strong>Selection:</strong> Prioritizes the "fittest"
+                      boards to breed the next generation.
+                    </p>
+                  </div>
+                  <div className="ga-step-card">
+                    <FontAwesomeIcon icon={faDna} className="ga-step-icon" />
+                    <p>
+                      <strong>Mutation:</strong> Randomly shifts queens to
+                      maintain diversity and find new paths.
+                    </p>
+                  </div>
+                  <div className="ga-step-card">
+                    <FontAwesomeIcon icon={faStop} className="ga-step-icon" />
+                    <p>
+                      <strong>Convergence:</strong> The cycle repeats until a
+                      perfect, 0-conflict solution is found.
+                    </p>
+                  </div>
+                </div>
+                <div className="drag-hint">← Drag back to Phase I</div>
               </div>
             </div>
           </div>

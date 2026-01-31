@@ -11,13 +11,12 @@ import {
 import "./Controls.css";
 
 const ProgressWatch = ({ currentGen, maxGen, conflicts, targetFitness }) => {
+  // 1. Check if the AI found the solution
   const isFinished = currentGen > 0 && conflicts <= targetFitness;
-
+  // 2. Logic: If finished, force 100%. Otherwise, show generation progress.
   const percentage = isFinished
     ? 100
-    : currentGen === 0
-      ? 0
-      : Math.min(100, Math.round((currentGen / maxGen) * 100));
+    : Math.min(100, Math.round((currentGen / maxGen) * 100));
 
   const radius = 35;
   const circumference = 2 * Math.PI * radius;
@@ -25,7 +24,7 @@ const ProgressWatch = ({ currentGen, maxGen, conflicts, targetFitness }) => {
 
   return (
     <div className="watch-container">
-      {/* Add finished class for the gold/green glow we discussed */}
+      {/* The 'finished' class will be added when the solution is found */}
       <div className={`watch-face ${isFinished ? "finished" : ""}`}>
         <svg className="watch-svg" viewBox="0 0 100 100">
           <circle className="watch-track" cx="50" cy="50" r={radius} />
@@ -36,12 +35,17 @@ const ProgressWatch = ({ currentGen, maxGen, conflicts, targetFitness }) => {
             r={radius}
             strokeDasharray={circumference}
             strokeDashoffset={offset}
+            style={{
+              transition: isFinished
+                ? "stroke-dashoffset 0.8s ease-out"
+                : "stroke-dashoffset 0.3s linear",
+            }}
           />
         </svg>
         <div className="watch-display">
           <span className="watch-percent">{percentage}%</span>
           <span className="watch-label">
-            {isFinished ? "SOLVED" : "PROGRESS"}
+            {isFinished ? "SOLVED" : `GEN ${currentGen}`}
           </span>
         </div>
       </div>

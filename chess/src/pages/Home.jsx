@@ -48,6 +48,7 @@ const Home = () => {
       } else if (type === "MESSAGE") {
         setMessage(workerMsg);
       } else if (type === "FINISHED") {
+        if (workerGen) setCurrentGen(workerGen);
         workerRef.current = null;
         setIsRunning(false);
       }
@@ -71,7 +72,7 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="main-layout">
-        {/* Render the new Navbar component */}
+        {/* Navbar component */}
         <Navbar
           onStart={handleStart}
           onReset={handleReset}

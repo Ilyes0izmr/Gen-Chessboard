@@ -14,7 +14,6 @@ self.onmessage = async (e) => {
     crossoverProbability: params.crossoverProbability,
     mutationProbability: params.mutationProbability,
     
-    // Updated callback: ensure GeneticAlgorithm passes 'vector' here
     onGenerationComplete: (generation, matrix, conflicts, vector ,conflictSquares) => {
       const currentVectorString = vector ? vector.join(',') : '';
 

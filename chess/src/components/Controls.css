@@ -146,7 +146,7 @@
 .watch-track { fill: none; stroke: rgba(0, 0, 0, 0.05); stroke-width: 8; }
 .watch-progress {
   fill: none;
-  stroke: rgba(22, 28, 61, 0.6);
+  stroke: rgba(35, 42, 80, 0.678);
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.4s ease;
@@ -191,12 +191,13 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
+  margin-right: 30px;
   color: #555;
   font-size: 0.8rem;
   text-shadow: 1px 1px 0px var(--light-highlight);
 }
 
-.warning { color: #8a2a2a; opacity: 0.9; }
+.warning { width: 18px ; height : 18px;color: #3f1a22cc; opacity: 0.9; }
 
 /* --- FIREFOX FIXES --- */
 .neomorphic-slider::-moz-range-thumb {
