@@ -10,23 +10,56 @@ import {
   faUsers,
   faArrowsRotate,
   faBullseye,
+  faGear,
+  faChessQueen,
+  faChessRook,
+  faChessBishop,
+  faChessKnight,
+  faMinus,
+  faPlus,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import html2canvas from "html2canvas";
 import "./Navbar.css";
 
-const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
+const MIN_PIECES = 4;
+const MAX_PIECES = 16;
+
+const PIECE_DEFS = [
+  { key: "Q", label: "Queens", icon: faChessQueen },
+  { key: "R", label: "Rooks", icon: faChessRook },
+  { key: "B", label: "Bishops", icon: faChessBishop },
+  { key: "K", label: "Knights", icon: faChessKnight },
+];
+
+const Navbar = ({ onStart, onReset, statusMessage, isRunning, pieceConfig, onPieceConfigChange }) => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [rotation, setRotation] = useState(0);
   const startX = useRef(0);
 
+  // Local draft config — only applied when user clicks Apply
+  const [draftConfig, setDraftConfig] = useState({ ...pieceConfig });
+
   const toggleInfo = () => setIsInfoOpen(!isInfoOpen);
 
-  const handleClose = () => {
+  const toggleConfig = () => {
+    if (!isConfigOpen) {
+      setDraftConfig({ ...pieceConfig }); // Reset draft to current config
+    }
+    setIsConfigOpen(!isConfigOpen);
+  };
+
+  const handleCloseInfo = () => {
     setIsInfoOpen(false);
     setRotation(0);
+  };
+
+  const handleCloseConfig = () => {
+    setIsConfigOpen(false);
   };
 
   const handleMouseDown = (e) => {
@@ -62,7 +95,32 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
         link.download = `Gen-Solver-Capture-${new Date().getTime()}.png`;
         link.href = canvas.toDataURL("image/png", 1.0);
         link.click();
+        link.href = ""; // Release data URL reference for memory cleanup
       });
+    }
+  };
+
+  // --- Config card logic ---
+  const draftTotal = Object.values(draftConfig).reduce((s, v) => s + v, 0);
+  const isValidTotal = draftTotal >= MIN_PIECES && draftTotal <= MAX_PIECES && draftTotal % 2 === 0;
+
+  const handleIncrement = (key) => {
+    const newTotal = draftTotal + 1;
+    if (newTotal <= MAX_PIECES) {
+      setDraftConfig((prev) => ({ ...prev, [key]: prev[key] + 1 }));
+    }
+  };
+
+  const handleDecrement = (key) => {
+    if (draftConfig[key] > 0) {
+      setDraftConfig((prev) => ({ ...prev, [key]: prev[key] - 1 }));
+    }
+  };
+
+  const handleApplyConfig = () => {
+    if (isValidTotal) {
+      onPieceConfigChange({ ...draftConfig });
+      setIsConfigOpen(false);
     }
   };
 
@@ -80,7 +138,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
             <a
               href="https://www.linkedin.com/in/ilyes-izemmouren-901798337/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="social-link"
             >
               <FontAwesomeIcon icon={faLinkedin} className="fa-icon-engraved" />
@@ -88,7 +146,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
             <a
               href="https://github.com/Ilyes0izmr"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="social-link"
             >
               <FontAwesomeIcon icon={faGithub} className="fa-icon-engraved" />
@@ -96,7 +154,7 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
             <a
               href="https://github.com/Ilyes0izmr"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="social-link"
             >
               <FontAwesomeIcon icon={faUserTie} className="fa-icon-engraved" />
@@ -113,6 +171,13 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
               title="Algorithm Info"
             >
               <FontAwesomeIcon icon={faCircleInfo} className="fa-icon" />
+            </button>
+            <button
+              className={`button-item config ${isConfigOpen ? "active-toggle" : ""}`}
+              onClick={toggleConfig}
+              title="Board Configuration"
+            >
+              <FontAwesomeIcon icon={faGear} className="fa-icon" />
             </button>
             <button
               className="button-item download"
@@ -132,10 +197,11 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
         </div>
       </div>
 
+      {/* --- INFO MODAL --- */}
       {isInfoOpen && (
         <div
           className="modal-overlay"
-          onClick={handleClose}
+          onClick={handleCloseInfo}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
         >
@@ -216,6 +282,67 @@ const Navbar = ({ onStart, onReset, statusMessage, isRunning }) => {
                 </div>
                 <div className="drag-hint">← Drag back to Phase I</div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- CONFIG MODAL --- */}
+      {isConfigOpen && (
+        <div className="modal-overlay" onClick={handleCloseConfig}>
+          <div
+            className="config-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="config-close-btn" onClick={handleCloseConfig}>
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+
+            <h2 className="modal-title">Board Configuration</h2>
+            <p className="config-subtitle">Customize pieces on the board</p>
+
+            <div className="config-pieces-list">
+              {PIECE_DEFS.map(({ key, label, icon }) => (
+                <div className="config-piece-row" key={key}>
+                  <div className="config-piece-info">
+                    <FontAwesomeIcon icon={icon} className="config-piece-icon" />
+                    <span className="config-piece-label">{label}</span>
+                  </div>
+                  <div className="config-stepper">
+                    <button
+                      className="stepper-btn"
+                      onClick={() => handleDecrement(key)}
+                      disabled={draftConfig[key] <= 0}
+                    >
+                      <FontAwesomeIcon icon={faMinus} />
+                    </button>
+                    <span className="stepper-value">{draftConfig[key]}</span>
+                    <button
+                      className="stepper-btn"
+                      onClick={() => handleIncrement(key)}
+                      disabled={draftTotal >= MAX_PIECES}
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="config-footer">
+              <div className={`config-total-badge ${isValidTotal ? "valid" : "invalid"}`}>
+                <span className="config-total-label">Total</span>
+                <span className="config-total-value">{draftTotal}</span>
+                <span className="config-total-range">{MIN_PIECES}–{MAX_PIECES} even</span>
+              </div>
+              <button
+                className={`config-apply-btn ${isValidTotal ? "" : "disabled"}`}
+                onClick={handleApplyConfig}
+                disabled={!isValidTotal}
+              >
+                <FontAwesomeIcon icon={faCheck} className="apply-icon" />
+                <span>Apply</span>
+              </button>
             </div>
           </div>
         </div>

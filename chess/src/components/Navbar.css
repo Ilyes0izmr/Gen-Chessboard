@@ -94,6 +94,11 @@
   transform: scale(0.92);
 }
 
+/* Active toggle state for info/config buttons */
+.button-item.active-toggle {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 6px var(--light-highlight);
+}
+
 /* Standard Floating Icons */
 .button-item .fa-icon {
   font-size: 1.1rem;
@@ -109,6 +114,7 @@
 
 .button-item.start .fa-icon { color: rgba(22, 28, 61, 0.8) !important; }
 .button-item.stop .fa-icon { color: #3f1a22cc !important; }
+.button-item.config .fa-icon { color: #555 !important; }
 
 /* --- 4. INTERACTIVE INFO CARD --- */
 .modal-overlay {
@@ -229,3 +235,268 @@
 .nav-divider { width: 1px; height: 25px; background: rgba(0,0,0,0.1); margin: 0 10px; margin-top: 5px; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============================================= */
+/* --- 7. CONFIGURATION CARD (NEUMORPHIC)    --- */
+/* ============================================= */
+
+.config-card {
+  position: relative;
+  width: 440px;
+  border-radius: 32px;
+  background: var(--surface-color);
+  padding: 36px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 20px 20px 60px rgba(0,0,0,0.15), -20px -20px 60px var(--light-highlight);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  animation: configSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes configSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.config-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--surface-color);
+  border-radius: 50%;
+  box-shadow: var(--raised-shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.config-close-btn:hover {
+  color: #3f1a22cc;
+  transform: scale(1.05);
+}
+
+.config-close-btn:active {
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2), inset -2px -2px 4px var(--light-highlight);
+  transform: scale(0.94);
+}
+
+.config-subtitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0 0 22px 0;
+}
+
+/* --- Piece Rows --- */
+.config-pieces-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.config-piece-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  box-shadow: var(--inner-groove);
+  transition: background 0.2s ease;
+}
+
+.config-piece-row:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+
+.config-piece-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.config-piece-icon {
+  font-size: 1.3rem;
+  color: #666;
+  width: 24px;
+  text-align: center;
+  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.15), 1px 1px 0px var(--light-highlight);
+}
+
+.config-piece-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #666;
+  text-shadow: 1px 1px 0px var(--light-highlight);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Stepper Controls --- */
+.config-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepper-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: var(--surface-color);
+  box-shadow: 3px 3px 6px rgba(0,0,0,0.12), -3px -3px 6px var(--light-highlight);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 0.65rem;
+  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stepper-btn:hover:not(:disabled) {
+  color: #333;
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.15), -4px -4px 8px var(--light-highlight);
+}
+
+.stepper-btn:active:not(:disabled) {
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2), inset -2px -2px 4px var(--light-highlight);
+  transform: scale(0.9);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stepper-value {
+  width: 36px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-color);
+  border-radius: 8px;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.08), inset -1px -1px 3px rgba(255,255,255,0.6);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* --- Footer: Total Badge + Apply Button --- */
+.config-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  box-shadow: var(--inner-groove);
+}
+
+.config-total-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.config-total-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0px var(--light-highlight);
+}
+
+.config-total-value {
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-color);
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.config-total-badge.valid .config-total-value {
+  color: #1a4d2e;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.1), -2px -2px 4px rgba(255,255,255,0.6),
+              0 0 8px rgba(26, 77, 46, 0.08);
+}
+
+.config-total-badge.invalid .config-total-value {
+  color: #6b1a1a;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.1), -2px -2px 4px rgba(255,255,255,0.6),
+              0 0 8px rgba(107, 26, 26, 0.08);
+}
+
+.config-total-range {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #aaa;
+  letter-spacing: 0.5px;
+}
+
+/* --- Apply Button --- */
+.config-apply-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 12px;
+  background: var(--surface-color);
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.12), -4px -4px 8px var(--light-highlight);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(22, 28, 61, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.config-apply-btn:hover:not(.disabled) {
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.15), -5px -5px 10px var(--light-highlight);
+  transform: translateY(-1px);
+}
+
+.config-apply-btn:active:not(.disabled) {
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.2), inset -3px -3px 6px var(--light-highlight);
+  transform: scale(0.95);
+}
+
+.config-apply-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: #999;
+}
+
+.apply-icon {
+  font-size: 0.75rem;
+}

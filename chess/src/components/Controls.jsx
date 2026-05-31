@@ -10,6 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Controls.css";
 
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
 const ProgressWatch = ({ currentGen, maxGen, conflicts, targetFitness }) => {
   // 1. Check if the AI found the solution
   const isFinished = currentGen > 0 && conflicts <= targetFitness;
@@ -91,6 +93,7 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
             className="neo-input-badge"
             value={maxGen}
             onChange={(e) => setMaxGen(parseInt(e.target.value) || 0)}
+            onBlur={() => setMaxGen((v) => clamp(v, 1, 100000))}
           />
         </div>
 
@@ -103,9 +106,10 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
           <input
             type="number"
             className="neo-input-badge"
-            min="50"
+            min="10"
             value={popSize}
             onChange={(e) => setPopSize(parseInt(e.target.value) || 0)}
+            onBlur={() => setPopSize((v) => clamp(v, 10, 10000))}
           />
         </div>
 
@@ -144,6 +148,7 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
             onChange={(e) =>
               setCrossoverProbability(parseFloat(e.target.value) || 0)
             }
+            onBlur={() => setCrossoverProbability((v) => clamp(v, 0, 1))}
           />
         </div>
 
@@ -161,6 +166,7 @@ const Controls = ({ onSettingsChange, conflicts, message, currentGen }) => {
             onChange={(e) =>
               setMutationProbability(parseFloat(e.target.value) || 0)
             }
+            onBlur={() => setMutationProbability((v) => clamp(v, 0, 1))}
           />
         </div>
 
