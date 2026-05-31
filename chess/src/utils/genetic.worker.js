@@ -13,8 +13,9 @@ self.onmessage = async (e) => {
     populationSize: params.popSize,
     crossoverProbability: params.crossoverProbability,
     mutationProbability: params.mutationProbability,
+    pieceConfig: params.pieceConfig,
     
-    onGenerationComplete: (generation, matrix, conflicts, vector ,conflictSquares) => {
+    onGenerationComplete: (generation, matrix, conflicts, vector, conflictSquares) => {
       const currentVectorString = vector ? vector.join(',') : '';
 
       const isBetter = conflicts < lastBestConflicts;
@@ -34,6 +35,15 @@ self.onmessage = async (e) => {
         });
       }
     },
+
+    // Unconditional progress tick — keeps the progress bar alive even during stagnation
+    onProgressTick: (generation) => {
+      self.postMessage({
+        type: 'GENERATION_TICK',
+        generation,
+      });
+    },
+
     onMessageUpdate: (message) => {
       self.postMessage({ type: 'MESSAGE', message });
     },

@@ -15,12 +15,39 @@ export function convertBoardToVector(board) {
   return board.flat();
 }
 
-export function generateRandomBoard() {
+/**
+ * Build a flat array of piece characters from a config object.
+ * e.g. { Q: 3, R: 2, B: 1, K: 0 } → ['Q','Q','Q','R','R','B']
+ */
+function buildPieceList(pieceConfig) {
+  const pieces = [];
+  for (const [type, count] of Object.entries(pieceConfig)) {
+    for (let i = 0; i < count; i++) {
+      pieces.push(type);
+    }
+  }
+  return pieces;
+}
+
+/**
+ * Generate a random 8×8 board with the given piece configuration.
+ * Pieces are split evenly: upper half gets total/2, lower half gets total/2.
+ * @param {Object} pieceConfig - e.g. { Q: 4, R: 2, B: 2, K: 2 }
+ */
+export function generateRandomBoard(pieceConfig) {
   const board = Array.from({ length: 8 }, () => Array(8).fill(null));
 
+  const allPieces = buildPieceList(pieceConfig);
+  const half = allPieces.length / 2;
+
+  // Shuffle all pieces first, then split into upper/lower halves
+  shuffleArray(allPieces);
+  const upperPieces = allPieces.slice(0, half);
+  const lowerPieces = allPieces.slice(half);
+
   // Upper and lower half piece distributions
-  placePiecesRandomly(board, 0, 3, ['Q', 'Q', 'R', 'B', 'K']);
-  placePiecesRandomly(board, 4, 7, ['Q', 'Q', 'R', 'B', 'K']);
+  placePiecesRandomly(board, 0, 3, upperPieces);
+  placePiecesRandomly(board, 4, 7, lowerPieces);
 
   return board;
 }

@@ -4,6 +4,8 @@ import Controls from "../components/Controls";
 import Navbar from "../components/Navbar";
 import "./Home.css";
 
+const DEFAULT_PIECE_CONFIG = { Q: 4, R: 2, B: 2, K: 2 };
+
 const Home = () => {
   const [board, setBoard] = useState(null);
   const [conflicts, setConflicts] = useState(0);
@@ -11,6 +13,7 @@ const Home = () => {
   const [message, setMessage] = useState("press start please ...");
   const [currentGen, setCurrentGen] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [pieceConfig, setPieceConfig] = useState(DEFAULT_PIECE_CONFIG);
 
   const controlsDataRef = useRef({
     maxGen: 50,
@@ -45,6 +48,9 @@ const Home = () => {
         setConflicts(workerConflicts);
         setConflictSquares(workerPaths || []);
         setCurrentGen(workerGen);
+      } else if (type === "GENERATION_TICK") {
+        // Unconditional progress update — keeps progress bar alive during stagnation
+        setCurrentGen(workerGen);
       } else if (type === "MESSAGE") {
         setMessage(workerMsg);
       } else if (type === "FINISHED") {
@@ -54,8 +60,11 @@ const Home = () => {
       }
     };
 
-    // We send the data stored in the ref
-    workerRef.current.postMessage(controlsDataRef.current);
+    // Send both controls data and piece configuration
+    workerRef.current.postMessage({
+      ...controlsDataRef.current,
+      pieceConfig,
+    });
   };
 
   const handleReset = () => {
@@ -78,6 +87,8 @@ const Home = () => {
           onReset={handleReset}
           statusMessage={message}
           isRunning={isRunning}
+          pieceConfig={pieceConfig}
+          onPieceConfigChange={setPieceConfig}
         />
 
         <div className="content-area">

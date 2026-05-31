@@ -14,10 +14,12 @@ export async function runGeneticAlgorithm({
   crossoverProbability,
   mutationProbability,
   onMessageUpdate,
+  onProgressTick,
+  pieceConfig,
 }) {
   conflictCache.clear();
 
-  let population = generatePopulation(populationSize);
+  let population = generatePopulation(populationSize, pieceConfig);
   let bestIndividual = null;
 
   if (onMessageUpdate) onMessageUpdate("AI is thinking...");
@@ -68,6 +70,11 @@ export async function runGeneticAlgorithm({
       );
     }
 
+    // Always send progress tick for the progress bar (every 10 gens)
+    if (onProgressTick && generation % 10 === 0) {
+      onProgressTick(generation);
+    }
+
     if (currentBest.conflicts <= targetConflicts) {
       if (onMessageUpdate) onMessageUpdate("AI found a solution!");
       return bestIndividual.matrix;
@@ -85,12 +92,12 @@ export async function runGeneticAlgorithm({
   return bestIndividual.matrix;
 }
 
-export function generatePopulation(popSize) {
+export function generatePopulation(popSize, pieceConfig) {
   const uniqueIndividuals = [];
   const seen = new Set();
 
   while (uniqueIndividuals.length < popSize) {
-    const matrix = generateRandomBoard();
+    const matrix = generateRandomBoard(pieceConfig);
     const vector = convertBoardToVector(matrix);
     const key = vector.join(',');
 

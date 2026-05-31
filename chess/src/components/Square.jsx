@@ -1,9 +1,10 @@
+import React from "react";
 import queenImage from "../assets/pieces/q.png";
 import knightImage from "../assets/pieces/k.png";
 import rookImage from "../assets/pieces/r.png";
 import bishopImage from "../assets/pieces/b.png";
 
-const Square = ({ isDark, piece, isConflict }) => {
+const Square = React.memo(({ isDark, piece, isConflict }) => {
   const squareClass = `square ${isDark ? "dark" : "light"} ${isConflict ? "conflict-glow" : ""}`;
   const pieceImages = {
     Q: queenImage,
@@ -25,6 +26,8 @@ const Square = ({ isDark, piece, isConflict }) => {
       )}
     </div>
   );
-};
+});
+
+Square.displayName = "Square";
 
 export default Square;
